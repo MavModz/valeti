@@ -1,7 +1,6 @@
 'use client';
 
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { Card, CardBody, Col } from 'react-bootstrap';
 import { postData } from '../data';
 import Link from 'next/link';
@@ -36,7 +35,7 @@ const PostCard = ({
               </Link>
             </span>
             <p className="text-muted mb-0">
-              <Icon icon="ti:calendar-due" />
+              <IconifyIcon icon="ti:calendar-due" />
               {date.toLocaleString('en-us', {
               month: 'short',
               day: '2-digit',
