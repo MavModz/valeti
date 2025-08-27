@@ -741,6 +741,7 @@ router.post('/customers', auth, authorize('admin'), validateCreateCustomer, asyn
 // @desc    Upload customer profile image to S3
 // @access  Private (Admin, Customer)
 router.post('/customers/upload-image', auth, authorize('admin', 'user'), upload.single('image'), asyncHandler(async (req, res) => {
+  console.log("Inside Customer Image Upload");
   try {
     if (!req.file) {
       return res.status(400).json({
