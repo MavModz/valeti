@@ -10,14 +10,6 @@ const nextConfig = {
   experimental: {
     esmExternals: 'loose',
   },
-  webpack: (config, { isServer }) => {
-    // Add path resolution for @ alias
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@': require('path').resolve(__dirname, 'src'),
-    };
-    return config;
-  },
   images: {
     remotePatterns: [
       {
