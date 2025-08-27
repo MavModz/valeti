@@ -16,8 +16,6 @@ import {
   DropdownMenu,
   DropdownItem,
   Pagination,
-  PaginationItem,
-  PaginationLink,
   Container
 } from 'react-bootstrap';
 import Image from 'next/image';
@@ -511,25 +509,29 @@ const SearchPage = () => {
               <Row>
                 <Col>
                   <Pagination className="justify-content-center">
-                    <PaginationItem disabled={currentPage === 1}>
-                      <PaginationLink onClick={() => handlePageChange(currentPage - 1)}>
-                        Previous
-                      </PaginationLink>
-                    </PaginationItem>
+                    <Pagination.Prev 
+                      disabled={currentPage === 1}
+                      onClick={() => handlePageChange(currentPage - 1)}
+                    >
+                      Previous
+                    </Pagination.Prev>
                     
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                      <PaginationItem key={page} active={page === currentPage}>
-                        <PaginationLink onClick={() => handlePageChange(page)}>
-                          {page}
-                        </PaginationLink>
-                      </PaginationItem>
+                      <Pagination.Item 
+                        key={page} 
+                        active={page === currentPage}
+                        onClick={() => handlePageChange(page)}
+                      >
+                        {page}
+                      </Pagination.Item>
                     ))}
                     
-                    <PaginationItem disabled={currentPage === totalPages}>
-                      <PaginationLink onClick={() => handlePageChange(currentPage + 1)}>
-                        Next
-                      </PaginationLink>
-                    </PaginationItem>
+                    <Pagination.Next 
+                      disabled={currentPage === totalPages}
+                      onClick={() => handlePageChange(currentPage + 1)}
+                    >
+                      Next
+                    </Pagination.Next>
                   </Pagination>
                 </Col>
               </Row>
