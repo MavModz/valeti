@@ -1,14 +1,14 @@
 'use client';
 
-import IconifyIcon from '@/app/components/wrappers/IconifyIcon';
+import IconifyIcon from '../../../../components/wrappers/IconifyIcon';
 import { Autoplay, EffectCreative, EffectFade, EffectFlip, Mousewheel, Navigation, Pagination, Scrollbar } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import smallImg1 from '@/app/assets/images/small/img-1.jpg';
-import smallImg2 from '@/app/assets/images/small/img-2.jpg';
-import smallImg3 from '@/app/assets/images/small/img-3.jpg';
-import smallImg4 from '@/app/assets/images/small/img-4.jpg';
-import smallImg5 from '@/app/assets/images/small/img-5.jpg';
-import smallImg6 from '@/app/assets/images/small/img-6.jpg';
+import smallImg1 from '../../../../assets/images/small/img-1.jpg';
+import smallImg2 from '../../../../assets/images/small/img-2.jpg';
+import smallImg3 from '../../../../assets/images/small/img-3.jpg';
+import smallImg4 from '../../../../assets/images/small/img-4.jpg';
+import smallImg5 from '../../../../assets/images/small/img-5.jpg';
+import smallImg6 from '../../../../assets/images/small/img-6.jpg';
 
 // styles
 import 'swiper/css';
@@ -18,7 +18,7 @@ import 'swiper/css/mousewheel';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-import ComponentContainerCard from '@/components/ComponentContainerCard';
+import ComponentContainerCard from '../../../../components/ComponentContainerCard';
 import { Col, Row } from 'react-bootstrap';
 import Image from 'next/image';
 const DefaultSwiper = () => {
