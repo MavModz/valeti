@@ -1,6 +1,6 @@
 'use client';
 
-import ComponentContainerCard from '../../../../../components/ComponentContainerCard';
+import ComponentContainerCard from '../../../../components/ComponentContainerCard';
 import { Button } from 'react-bootstrap';
 import { withSwal } from 'react-sweetalert2';
 const AllSweetAlerts = withSwal(props => {

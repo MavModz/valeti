@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 // css
 import '@smastrom/react-rating/style.css';
-import ComponentContainerCard from '../../../../../components/ComponentContainerCard';
+import ComponentContainerCard from '../../../../components/ComponentContainerCard';
 const DefaultStarRating = () => {
   const [rating, setRating] = useState(3);
   return <ComponentContainerCard title="Basic @smastrom/react-rating Example" id="basic" titleClass="mb-3">
