@@ -8,9 +8,7 @@ import Link from 'next/link';
 import { Button, Card, CardBody, CardFooter, Col, Row } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 
-export const metadata = {
-  title: 'Customer Grid'
-};
+
 
 const CustomerGridCard = ({
   user,
