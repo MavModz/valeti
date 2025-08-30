@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { 
-  Navbar, 
-  Nav, 
-  NavDropdown, 
-  Container, 
+import {
+  Navbar,
+  Nav,
+  NavDropdown,
+  Container,
   Button,
   Offcanvas
 } from 'react-bootstrap';
@@ -32,55 +32,265 @@ const PublicHeader = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Handle click outside to close dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.dropdown')) {
+        const allMenus = document.querySelectorAll('.dropdown-menu.show');
+        allMenus.forEach(menu => {
+          if (menu && document.contains(menu)) {
+            menu.classList.remove('show');
+          }
+        });
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   const isActive = (path) => {
     return pathname === path;
   };
 
   const navItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Search', href: '/search' },
-    { 
-      label: 'Properties', 
+    {
+      label: 'Home Designs',
       href: '#',
       dropdown: [
-        { label: 'For Rent', href: '/properties/rent' },
-        { label: 'For Sale', href: '/properties/sale' },
-        { label: 'New Projects', href: '/properties/new' },
-        { label: 'Commercial', href: '/properties/commercial' }
+        { label: 'Standard Home Design', href: '/home-designs/standard' },
+        {
+          label: 'Custom Homes',
+          href: '/home-designs/custom',
+          subDropdown: [
+            { label: 'Architectural Design', href: '/home-designs/custom/architectural' },
+            { label: 'Sloping Lot /Split Level Homes', href: '/home-designs/custom/sloping-lot' },
+            { label: 'Uneven Lot', href: '/home-designs/custom/uneven-lot' },
+            { label: 'Knockdown Rebuild', href: '/home-designs/custom/knockdown-rebuild' },
+            { label: 'Renovation', href: '/home-designs/custom/renovation' },
+            { label: 'Rooming House', href: '/home-designs/custom/rooming-house' },
+            { label: 'Sustainable Home', href: '/home-designs/custom/sustainable' }
+          ]
+        },
+        {
+          label: 'Interior',
+          href: '/home-designs/interior',
+          subDropdown: [
+            { label: 'Studio/Aspirations', href: '/home-designs/interior/studio-aspirations' }
+          ]
+        },
+        {
+          label: 'Multiunit Development',
+          href: '/home-designs/multiunit',
+          subDropdown: [
+            { label: 'Side By Side', href: '/home-designs/multiunit/side-by-side' },
+            { label: 'Back To Back', href: '/home-designs/multiunit/back-to-back' },
+            { label: 'Multi Units', href: '/home-designs/multiunit/multi-units' }
+          ]
+        },
+        {
+          label: 'Commercial Design',
+          href: '/home-designs/commercial',
+          subDropdown: [
+            { label: 'Apartments', href: '/home-designs/commercial/apartments' },
+            { label: 'Warehouse', href: '/home-designs/commercial/warehouse' },
+            { label: 'Office', href: '/home-designs/commercial/office' }
+          ]
+        }
       ]
     },
-    { label: 'About', href: '/about' },
-    { label: 'Contact', href: '/contact' }
+    {
+      label: 'House & Land',
+      href: '#',
+      dropdown: [
+        { label: 'Home For Sales', href: '/house-land/home-for-sales' },
+        { label: 'Build With Us', href: '/house-land/build-with-us' },
+        { label: 'Offers', href: '/house-land/offers' }
+      ]
+    },
+    {
+      label: 'Client Journey',
+      href: '#',
+      dropdown: [
+        {
+          label: 'Portfolio',
+          href: '/client-journey/portfolio',
+          subDropdown: [
+            { label: 'Completed Project', href: '/client-journey/portfolio/completed-project' },
+            { label: 'Virtual 360 Tour', href: '/client-journey/portfolio/virtual-360-tour' },
+            { label: 'Display Homes', href: '/client-journey/portfolio/display-homes' }
+          ]
+        },
+        { label: 'Step By Step Process', href: '/client-journey/step-by-step-process' },
+        { label: 'Buyers Advocate', href: '/client-journey/buyers-advocate' }
+      ]
+    },
+    {
+      label: 'Partners',
+      href: '#',
+      dropdown: [
+        { label: 'Consultants', href: '/partners/consultants' },
+        { label: 'Loan', href: '/partners/loan' },
+        { label: 'Insurances', href: '/partners/insurances' },
+        { label: 'Conveyancer', href: '/partners/conveyancer' },
+        { label: '3d', href: '/partners/3d' },
+        { label: 'Sales', href: '/partners/sales' },
+        { label: 'Rentals', href: '/partners/rentals' }
+      ]
+    },
+    {
+      label: 'Testimonials',
+      href: '#',
+    }
   ];
 
   const renderNavItem = (item) => {
     const linkClass = `fw-medium ${isScrolled ? 'text-dark' : 'text-white'} ${isActive(item.href) ? 'active' : ''}`;
-    
+
     if (item.dropdown) {
       return (
-        <NavDropdown 
+        <div
           key={item.label}
-          title={item.label} 
-          id={`nav-dropdown-${item.label}`}
-          className={linkClass}
+          className="nav-item dropdown"
+          onMouseEnter={(e) => {
+            // Close all other dropdowns first
+            const allMenus = document.querySelectorAll('.dropdown-menu.show');
+            allMenus.forEach(menu => {
+              if (menu && menu !== e.currentTarget.querySelector('.dropdown-menu')) {
+                menu.classList.remove('show');
+              }
+            });
+
+            const dropdownMenu = e.currentTarget.querySelector('.dropdown-menu');
+            if (dropdownMenu) {
+              dropdownMenu.classList.add('show');
+            }
+          }}
+          onMouseLeave={(e) => {
+            const currentTarget = e.currentTarget;
+            setTimeout(() => {
+              if (currentTarget && document.contains(currentTarget)) {
+                const dropdownMenu = currentTarget.querySelector('.dropdown-menu');
+                if (dropdownMenu && !currentTarget.matches(':hover') && !dropdownMenu.matches(':hover')) {
+                  dropdownMenu.classList.remove('show');
+                }
+              }
+            }, 150);
+          }}
         >
-          {item.dropdown.map((dropdownItem) => (
-            <NavDropdown.Item 
-              key={dropdownItem.label}
-              as={Link} 
-              href={dropdownItem.href}
-            >
-              {dropdownItem.label}
-            </NavDropdown.Item>
-          ))}
-        </NavDropdown>
+          <a
+            className={`nav-link dropdown-toggle ${linkClass}`}
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            onClick={(e) => e.preventDefault()}
+          >
+            {item.label}
+          </a>
+          <ul
+            className="dropdown-menu"
+            onMouseEnter={(e) => {
+              e.currentTarget.classList.add('show');
+            }}
+            onMouseLeave={(e) => {
+              const currentTarget = e.currentTarget;
+              setTimeout(() => {
+                if (currentTarget && document.contains(currentTarget) && !currentTarget.matches(':hover')) {
+                  currentTarget.classList.remove('show');
+                }
+              }, 150);
+            }}
+          >
+            {item.dropdown.map((dropdownItem) => {
+              if (dropdownItem.subDropdown && dropdownItem.subDropdown.length > 0) {
+                return (
+                  <li
+                    key={dropdownItem.label}
+                    className="dropdown-item dropdown-submenu"
+                    onMouseEnter={(e) => {
+                      // Close all other sub-dropdowns first
+                      const allSubMenus = document.querySelectorAll('.sub-dropdown-menu.show');
+                      allSubMenus.forEach(subMenu => {
+                        if (subMenu && subMenu !== e.currentTarget.querySelector('.sub-dropdown-menu')) {
+                          subMenu.classList.remove('show');
+                        }
+                      });
+
+                      const subDropdownMenu = e.currentTarget.querySelector('.sub-dropdown-menu');
+                      if (subDropdownMenu) {
+                        subDropdownMenu.classList.add('show');
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      const currentTarget = e.currentTarget;
+                      setTimeout(() => {
+                        if (currentTarget && document.contains(currentTarget)) {
+                          const subDropdownMenu = currentTarget.querySelector('.sub-dropdown-menu');
+                          if (subDropdownMenu && !currentTarget.matches(':hover') && !subDropdownMenu.matches(':hover')) {
+                            subDropdownMenu.classList.remove('show');
+                          }
+                        }
+                      }, 150);
+                    }}
+                  >
+                    <a
+                      className="dropdown-link"
+                      href={dropdownItem.href}
+                      onClick={(e) => e.preventDefault()}
+                    >
+                      {dropdownItem.label}
+                      <IconifyIcon icon="ri:arrow-right-s-line" className="ms-auto" />
+                    </a>
+                    <ul
+                      className="dropdown-menu sub-dropdown-menu"
+                      onMouseEnter={(e) => {
+                        e.currentTarget.classList.add('show');
+                      }}
+                      onMouseLeave={(e) => {
+                        const currentTarget = e.currentTarget;
+                        setTimeout(() => {
+                          if (currentTarget && document.contains(currentTarget) && !currentTarget.matches(':hover')) {
+                            currentTarget.classList.remove('show');
+                          }
+                        }, 150);
+                      }}
+                    >
+                      {dropdownItem.subDropdown.map((subDropdownItem) => (
+                        <li key={subDropdownItem.label}>
+                          <a
+                            className="dropdown-item"
+                            href={subDropdownItem.href}
+                          >
+                            {subDropdownItem.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                );
+              }
+
+              return (
+                <li key={dropdownItem.label}>
+                  <a
+                    className="dropdown-item"
+                    href={dropdownItem.href}
+                  >
+                    {dropdownItem.label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       );
     }
 
     return (
-      <Nav.Link 
+      <Nav.Link
         key={item.label}
-        as={Link} 
+        as={Link}
         href={item.href}
         className={linkClass}
       >
@@ -91,7 +301,7 @@ const PublicHeader = () => {
 
   return (
     <>
-      <style jsx>{`
+      <style jsx global>{`
         .navbar {
           transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
           background: linear-gradient(135deg, transparent 0%, transparent 100%);
@@ -160,6 +370,8 @@ const PublicHeader = () => {
           transform: translateY(-2px);
           box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
+        
+        /* Dropdown Styles */
         .dropdown-toggle {
           transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
           transition-delay: 0.1s;
@@ -167,31 +379,190 @@ const PublicHeader = () => {
         .dropdown-toggle:hover {
           color: var(--bs-primary) !important;
         }
-        .dropdown-menu {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          border: none;
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        
+                 .dropdown-menu {
+           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+           border: none;
+           box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+           border-radius: 8px;
+           padding: 0.5rem 0;
+           min-width: 220px;
+           margin-top: 0;
+           opacity: 0;
+           visibility: hidden;
+           transform: translateY(-10px);
+           position: absolute;
+           top: 100%;
+           left: 0;
+           background: #343a40;
+           border: 1px solid rgba(255,255,255,0.1);
+         }
+        
+        .dropdown-menu.show {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
         }
-        .dropdown-item {
-          transition: all 0.2s ease;
+        
+        .nav-item.dropdown {
+          position: relative;
         }
+        
+        .nav-item.dropdown::after {
+          content: '';
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          height: 10px;
+          background: transparent;
+        }
+        
+                 .dropdown-item {
+           transition: all 0.2s ease;
+           padding: 0.75rem 1.25rem;
+           border-radius: 0;
+           color: white;
+         }
+         
+         /* Ensure consistent padding for all dropdown items */
+         .dropdown-item .dropdown-link,
+         .dropdown-submenu .dropdown-link {
+           padding: 0.75rem 1.25rem !important;
+           margin: 0 !important;
+         }
+        
         .dropdown-item:hover {
           background-color: var(--bs-primary);
           color: white;
           transform: translateX(5px);
         }
+        
+        /* Sub-dropdown Styles */
+                 .dropdown-submenu {
+           position: relative !important;
+           display: block !important;
+           padding: 0 !important;
+         }
+        
+                 /* Override Bootstrap's default dropdown positioning */
+         .dropdown-menu .dropdown-submenu .dropdown-menu {
+           position: absolute !important;
+           top: 0 !important;
+           left: 100% !important;
+           margin-top: 0 !important;
+           margin-left: 2px !important;
+           opacity: 0;
+           visibility: hidden;
+           transform: translateX(-10px);
+           min-width: 220px;
+           z-index: 1001;
+           background: #343a40;
+           border: 1px solid rgba(255,255,255,0.1);
+           border-radius: 8px;
+           box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+           padding: 0.5rem 0;
+           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+           display: block !important;
+           transform-origin: left center;
+         }
+        
+        .dropdown-menu .dropdown-submenu .dropdown-menu.show {
+          opacity: 1;
+          visibility: visible;
+          transform: translateX(0);
+        }
+        
+                 .dropdown-link {
+           display: flex;
+           align-items: center;
+           justify-content: space-between;
+           text-decoration: none;
+           color: inherit;
+           padding: 0.75rem 1.25rem;
+           width: 100%;
+           transition: all 0.2s ease;
+           border-radius: 0;
+         }
+        
+        .dropdown-link:hover {
+          background-color: var(--bs-primary);
+          color: white;
+          text-decoration: none;
+          transform: translateX(5px);
+        }
+        
+                 .dropdown-submenu .sub-dropdown-menu {
+           position: absolute !important;
+           top: 0 !important;
+           left: 100% !important;
+           margin-top: 0 !important;
+           margin-left: 2px !important;
+           opacity: 0;
+           visibility: hidden;
+           transform: translateX(-10px);
+           min-width: 220px;
+           z-index: 1001;
+           background: #343a40;
+           border: 1px solid rgba(255,255,255,0.1);
+           border-radius: 8px;
+           box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+           padding: 0.5rem 0;
+           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+           display: block !important;
+           transform-origin: left center;
+         }
+        
+        .dropdown-submenu .sub-dropdown-menu.show {
+          opacity: 1;
+          visibility: visible;
+          transform: translateX(0);
+        }
+        
+                 .dropdown-submenu .sub-dropdown-menu .dropdown-item {
+           padding: 0.75rem 1.25rem;
+           border-radius: 0;
+           transition: all 0.2s ease;
+           color: white;
+         }
+        
+        .dropdown-submenu .sub-dropdown-menu .dropdown-item:hover {
+          background-color: var(--bs-primary);
+          color: white;
+          transform: translateX(5px);
+        }
+        
+        /* Force sub-dropdown to appear to the right */
+        .dropdown-submenu .sub-dropdown-menu,
+        .dropdown-menu .dropdown-submenu .dropdown-menu {
+          position: absolute !important;
+          top: 0 !important;
+          left: 100% !important;
+          right: auto !important;
+          bottom: auto !important;
+          margin-top: 0 !important;
+          margin-left: 2px !important;
+          margin-right: auto !important;
+          margin-bottom: auto !important;
+          transform: translateX(-10px) !important;
+        }
+        
+        .dropdown-submenu .sub-dropdown-menu.show,
+        .dropdown-menu .dropdown-submenu .dropdown-menu.show {
+          transform: translateX(0) !important;
+        }
       `}</style>
-      <Navbar 
+      <Navbar
         bg={isScrolled ? "white" : "transparent"}
-        expand="lg" 
+        expand="lg"
         className={`${isScrolled ? 'shadow-sm border-bottom scrolled' : ''}`}
         sticky="top"
       >
         <Container>
           {/* Logo */}
           <Navbar.Brand as={Link} href="/" className="fw-bold d-flex align-items-center">
-            <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2" 
-                 style={{ width: '40px', height: '40px' }}>
+            <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"
+              style={{ width: '40px', height: '40px' }}>
               <IconifyIcon icon="ri:home-line" className="text-white fs-5" />
             </div>
             <span className={`fs-4 ${isScrolled ? 'text-primary' : 'text-white'}`}>PropertyFinder</span>
@@ -203,22 +574,22 @@ const PublicHeader = () => {
               {navItems.map(renderNavItem)}
             </Nav>
           </div>
-          
+
           {/* Auth Buttons */}
           <div className="d-none d-lg-flex gap-2">
-            <Button 
-              as={Link} 
-              href="/auth/sign-in" 
+            <Button
+              as={Link}
+              href="/auth/sign-in"
               variant={isScrolled ? "outline-primary" : "outline-light"}
               size="sm"
             >
               <IconifyIcon icon="ri:login-box-line" className="me-1" />
               Sign In
             </Button>
-            <Button 
-              as={Link} 
-              href="/auth/sign-up" 
-              variant="primary" 
+            <Button
+              as={Link}
+              href="/auth/sign-up"
+              variant="primary"
               size="sm"
             >
               <IconifyIcon icon="ri:user-add-line" className="me-1" />
@@ -243,8 +614,8 @@ const PublicHeader = () => {
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>
             <div className="d-flex align-items-center">
-              <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2" 
-                   style={{ width: '32px', height: '32px' }}>
+              <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"
+                style={{ width: '32px', height: '32px' }}>
                 <IconifyIcon icon="ri:home-line" className="text-white" />
               </div>
               <span className="text-primary fw-bold">PropertyFinder</span>
@@ -259,9 +630,9 @@ const PublicHeader = () => {
                   <div key={item.label} className="mb-3">
                     <h6 className="text-muted mb-2">{item.label}</h6>
                     {item.dropdown.map((dropdownItem) => (
-                      <Nav.Link 
+                      <Nav.Link
                         key={dropdownItem.label}
-                        as={Link} 
+                        as={Link}
                         href={dropdownItem.href}
                         className={`ps-3 ${isActive(dropdownItem.href) ? 'active' : ''}`}
                         onClick={handleClose}
@@ -274,9 +645,9 @@ const PublicHeader = () => {
               }
 
               return (
-                <Nav.Link 
+                <Nav.Link
                   key={item.label}
-                  as={Link} 
+                  as={Link}
                   href={item.href}
                   className={`mb-2 ${isActive(item.href) ? 'active' : ''}`}
                   onClick={handleClose}
@@ -286,25 +657,25 @@ const PublicHeader = () => {
               );
             })}
           </Nav>
-          
+
           <hr className="my-4" />
-          
+
           {/* Mobile Auth Buttons */}
           <div className="d-flex flex-column gap-2">
-            <Button 
-              as={Link} 
-              href="/auth/sign-in" 
-              variant="outline-primary" 
+            <Button
+              as={Link}
+              href="/auth/sign-in"
+              variant="outline-primary"
               size="lg"
               onClick={handleClose}
             >
               <IconifyIcon icon="ri:login-box-line" className="me-2" />
               Sign In
             </Button>
-            <Button 
-              as={Link} 
-              href="/auth/sign-up" 
-              variant="primary" 
+            <Button
+              as={Link}
+              href="/auth/sign-up"
+              variant="primary"
               size="lg"
               onClick={handleClose}
             >
