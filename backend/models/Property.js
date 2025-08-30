@@ -19,12 +19,16 @@ const propertySchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['apartment', 'house', 'villa', 'condo', 'land', 'commercial', 'office'],
+    enum: ['Single Story', 'Double Story'],
     required: [true, 'Property category is required']
+  },
+  propertyFor: {
+    type: String,
+    required: false
   },
   price: {
     type: Number,
-    required: [true, 'Property price is required'],
+    required: false,
     min: [0, 'Price cannot be negative']
   },
   currency: {
@@ -34,11 +38,11 @@ const propertySchema = new mongoose.Schema({
   location: {
     address: {
       type: String,
-      required: [true, 'Property address is required']
+      required: false
     },
     city: {
       type: String,
-      required: [true, 'City is required']
+      required: false
     },
     state: {
       type: String,

@@ -63,10 +63,11 @@ const sampleUsers = [
 
 const sampleProperties = [
   {
-    title: 'Modern Downtown Apartment',
-    description: 'Beautiful modern apartment in the heart of downtown with stunning city views. Features include hardwood floors, stainless steel appliances, and a private balcony.',
+    title: 'Modern Downtown Single Story',
+    description: 'Beautiful modern single story property in the heart of downtown with stunning city views. Features include hardwood floors, stainless steel appliances, and a private balcony.',
     type: 'sale',
-    category: 'apartment',
+    category: 'Single Story',
+    propertyFor: '12 meter',
     price: 450000,
     currency: 'USD',
     location: {
@@ -103,7 +104,7 @@ const sampleProperties = [
       }
     ],
     status: 'available',
-    tags: ['modern', 'downtown', 'apartment'],
+    tags: ['modern', 'downtown', 'single-story'],
     isFeatured: true,
     contactInfo: {
       phone: '+1234567890',
@@ -111,10 +112,11 @@ const sampleProperties = [
     }
   },
   {
-    title: 'Luxury Villa with Pool',
-    description: 'Stunning luxury villa featuring a private pool, gourmet kitchen, and spacious living areas. Perfect for families looking for comfort and elegance.',
+    title: 'Luxury Double Story with Pool',
+    description: 'Stunning luxury double story property featuring a private pool, gourmet kitchen, and spacious living areas. Perfect for families looking for comfort and elegance.',
     type: 'sale',
-    category: 'villa',
+    category: 'Double Story',
+    propertyFor: '20 meter',
     price: 1200000,
     currency: 'USD',
     location: {
@@ -151,7 +153,7 @@ const sampleProperties = [
       }
     ],
     status: 'available',
-    tags: ['luxury', 'villa', 'pool'],
+    tags: ['luxury', 'double-story', 'pool'],
     isFeatured: true,
     contactInfo: {
       phone: '+1234567891',
@@ -159,10 +161,11 @@ const sampleProperties = [
     }
   },
   {
-    title: 'Cozy Family House',
-    description: 'Perfect family home in a quiet neighborhood with excellent schools nearby. Features a large backyard and modern amenities.',
+    title: 'Cozy Family Single Story',
+    description: 'Perfect family single story home in a quiet neighborhood with excellent schools nearby. Features a large backyard and modern amenities.',
     type: 'rent',
-    category: 'house',
+    category: 'Single Story',
+    propertyFor: '14 meter',
     price: 2500,
     currency: 'USD',
     location: {
@@ -199,7 +202,7 @@ const sampleProperties = [
       }
     ],
     status: 'available',
-    tags: ['family', 'house', 'rental'],
+    tags: ['family', 'single-story', 'rental'],
     isFeatured: false,
     contactInfo: {
       phone: '+1234567892',
@@ -234,9 +237,8 @@ const sampleDashboardData = {
         { country: 'United States', count: 3, percentage: 100.0 }
       ],
       categoryData: [
-        { category: 'apartment', count: 1, percentage: 33.3 },
-        { category: 'villa', count: 1, percentage: 33.3 },
-        { category: 'house', count: 1, percentage: 33.3 }
+        { category: 'Single Story', count: 2, percentage: 66.7 },
+        { category: 'Double Story', count: 1, percentage: 33.3 }
       ]
     }
   }

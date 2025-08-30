@@ -54,17 +54,14 @@ const PropertyAdd = ({
                   onChange={(e) => setPropertyCategory(e.target.value)}
                 >
                   <option value="">Select Categories</option>
-                  <option value="Villas">Villas</option>
-                  <option value="Residences">Residences</option>
-                  <option value="Bungalow">Bungalow</option>
-                  <option value="Apartment">Apartment</option>
-                  <option value="Penthouse">Penthouse</option>
+                  <option value="Single Story">Single Story</option>
+                  <option value="Double Story">Double Story</option>
                 </select>
                 {hasSubmitted && !propertyCategory && <div className="invalid-feedback">Please select a property category</div>}
               </Col>
               <Col lg={4}>
                 <label htmlFor="property-price" className="form-label">
-                  Price <span className="text-danger">*</span>
+                  Price
                 </label>
                 <div className="input-group mb-3">
                   <span className="input-group-text fs-20 px-2 py-0">
@@ -91,9 +88,14 @@ const PropertyAdd = ({
                   onChange={(e) => setPropertyFor(e.target.value)}
                 >
                   <option value="">Select Type</option>
-                  <option value="Sale">Sale</option>
-                  <option value="Rent">Rent</option>
-                  <option value="Other">Other</option>
+                  <option value="8 meter">8 meter</option>
+                  <option value="10 meter">10 meter</option>
+                  <option value="12 meter">12 meter</option>
+                  <option value="13 meter">13 meter</option>
+                  <option value="14 meter">14 meter</option>
+                  <option value="16 meter">16 meter</option>
+                  <option value="18 meter">18 meter</option>
+                  <option value="20 meter">20 meter</option>
                 </select>
                 {hasSubmitted && !propertyFor && <div className="invalid-feedback">Please select property type</div>}
               </Col>
@@ -190,11 +192,11 @@ const PropertyAdd = ({
                     control={control} 
                     name="address" 
                     type="text" 
-                    label="Property Address" 
+                    label="Property Address (Optional)" 
                     className="form-control" 
                     id="schedule-textarea" 
                     rows={3} 
-                    placeholder="Enter complete address" 
+                    placeholder="Enter complete address (optional)" 
                     error={errors.address?.message}
                   />
                 </div>
@@ -205,23 +207,23 @@ const PropertyAdd = ({
                     control={control} 
                     name="zipCode" 
                     type="text" 
-                    placeholder="Enter zip code" 
-                    label="Zip-Code" 
+                    placeholder="Enter zip code (optional)" 
+                    label="Zip-Code (Optional)" 
                     error={errors.zipCode?.message}
                   />
                 </div>
               </Col>
               <Col lg={4}>
                 <label htmlFor="choices-city" className="form-label">
-                  City <span className="text-danger">*</span>
+                  City (Optional)
                 </label>
                 <select 
-                  className={`form-control ${hasSubmitted && !city ? 'is-invalid' : ''}`}
+                  className={`form-control`}
                   id="choices-city"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                 >
-                  <option value="">Select City</option>
+                  <option value="">Select City (Optional)</option>
                   <optgroup label="UK">
                     <option value="London">London</option>
                     <option value="Manchester">Manchester</option>
@@ -253,19 +255,18 @@ const PropertyAdd = ({
                     <option value="Vancouver">Vancouver</option>
                   </optgroup>
                 </select>
-                {hasSubmitted && !city && <div className="invalid-feedback">Please select a city</div>}
               </Col>
               <Col lg={4}>
                 <label htmlFor="choices-country" className="form-label">
-                  Country <span className="text-danger">*</span>
+                  Country (Optional)
                 </label>
                 <select 
-                  className={`form-control ${hasSubmitted && !country ? 'is-invalid' : ''}`}
+                  className={`form-control`}
                   id="choices-country"
                   value={country}
                   onChange={(e) => setCountry(e.target.value)}
                 >
-                  <option value="">Select Country</option>
+                  <option value="">Select Country (Optional)</option>
                   <option value="United Kingdom">United Kingdom</option>
                   <option value="France">France</option>
                   <option value="Netherlands">Netherlands</option>
@@ -278,7 +279,6 @@ const PropertyAdd = ({
                   <option value="Spain">Spain</option>
                   <option value="United Arab Emirates">United Arab Emirates</option>
                 </select>
-                {hasSubmitted && !country && <div className="invalid-feedback">Please select a country</div>}
               </Col>
             </Row>
           </CardBody>

@@ -24,13 +24,19 @@ const usePropertyAdd = () => {
   const propertySchema = yup.object({
     name: yup.string().required('Property name is required').min(3, 'Property name must be at least 3 characters'),
     description: yup.string().required('Property description is required').min(10, 'Description must be at least 10 characters'),
-    price: yup.number().positive('Price must be positive').required('Price is required'),
+    price: yup.number().transform((value, originalValue) => {
+      return originalValue === '' ? undefined : value;
+    }).positive('Price must be positive').optional(),
     bedrooms: yup.number().min(0, 'Bedrooms must be 0 or greater').required('Number of bedrooms is required'),
     bathrooms: yup.number().min(0, 'Bathrooms must be 0 or greater').required('Number of bathrooms is required'),
     squareFootage: yup.number().positive('Square footage must be positive').required('Square footage is required'),
     floor: yup.number().min(0, 'Floor must be 0 or greater').required('Floor number is required'),
-    address: yup.string().required('Property address is required').min(10, 'Address must be at least 10 characters'),
-    zipCode: yup.string().required('Zip code is required')
+    address: yup.string().transform((value, originalValue) => {
+      return originalValue === '' ? undefined : value;
+    }).min(10, 'Address must be at least 10 characters if provided').optional(),
+    zipCode: yup.string().transform((value, originalValue) => {
+      return originalValue === '' ? undefined : value;
+    }).optional()
   });
 
   const {
@@ -62,9 +68,9 @@ const usePropertyAdd = () => {
   const onSubmit = async (data) => {
     setHasSubmitted(true);
     
-    if (!propertyCategory || !propertyFor || !city || !country) {
+    if (!propertyCategory || !propertyFor) {
       showNotification({
-        message: 'Please select property category, property type, city, and country',
+        message: 'Please select property category and property type',
         variant: 'error'
       });
       return;
@@ -76,15 +82,16 @@ const usePropertyAdd = () => {
       const propertyData = {
         title: data.name,
         description: data.description,
-        type: propertyFor.toLowerCase(), // sale, rent, other -> will be mapped to sale/rent/both
-        category: propertyCategory.toLowerCase(), // Villas -> villa, Residences -> house, etc.
-        price: parseFloat(data.price),
+        type: 'sale', // Default to sale since we're using meter values now
+        category: propertyCategory, // Use exact values: 'Single Story', 'Double Story'
+        propertyFor: propertyFor, // Use exact meter values: '8 meter', '10 meter', etc.
+        price: data.price && data.price !== '' ? parseFloat(data.price) : undefined,
         location: {
-          address: data.address,
-          city: city,
+          address: data.address && data.address.trim() !== '' ? data.address : undefined,
+          city: city && city.trim() !== '' ? city : undefined,
           state: 'Default State', // Backend requires state, we'll set a default
-          zipCode: data.zipCode,
-          country: country
+          zipCode: data.zipCode && data.zipCode.trim() !== '' ? data.zipCode : undefined,
+          country: country && country.trim() !== '' ? country : undefined
         },
         features: {
           bedrooms: parseInt(data.bedrooms),
@@ -102,23 +109,7 @@ const usePropertyAdd = () => {
         // agent and owner will be set by the backend based on authenticated user
       };
 
-      // Map property type to backend enum
-      if (propertyData.type === 'other') {
-        propertyData.type = 'sale'; // Default to sale for "other"
-      }
-
-      // Map property category to backend enum
-      const categoryMapping = {
-        'villas': 'villa',
-        'residences': 'house',
-        'bungalow': 'house',
-        'apartment': 'apartment',
-        'penthouse': 'apartment'
-      };
-      
-      if (categoryMapping[propertyData.category]) {
-        propertyData.category = categoryMapping[propertyData.category];
-      }
+      // No mapping needed since we're using exact values that match backend enum
 
       const response = await createProperty(propertyData);
       

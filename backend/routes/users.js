@@ -183,7 +183,7 @@ router.get('/agents', auth, authorize('admin', 'agent'), asyncHandler(async (req
     role: 'agent', 
     isActive: true 
   })
-    .select('firstName lastName email profilePicture phoneNumber createdAt')
+    .select('firstName lastName email profilePicture phoneNumber createdAt description propertiesNumber socialMedia specialization experience licenseNumber commission address')
     .sort({ createdAt: -1 })
     .limit(parseInt(limit))
     .lean();
@@ -204,7 +204,7 @@ router.get('/customers', auth, authorize('admin', 'agent'), asyncHandler(async (
     role: 'user', 
     isActive: true 
   })
-    .select('firstName lastName email profilePicture phoneNumber createdAt')
+    .select('firstName lastName email profilePicture phoneNumber createdAt description propertiesNumber socialMedia address')
     .sort({ createdAt: -1 })
     .limit(parseInt(limit))
     .lean();

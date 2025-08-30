@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Card, 
   CardBody, 
@@ -16,131 +16,20 @@ import {
   DropdownMenu,
   DropdownItem,
   Pagination,
-  Container
+  Container,
+  Spinner
 } from 'react-bootstrap';
 import Image from 'next/image';
 import Link from 'next/link';
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
 import PublicHeader from '@/components/layout/PublicHeader/page';
 
-// Import card images
+// Import card images for fallback
 import cardImg from '@/assets/images/small/img-1.jpg';
 import cardImg2 from '@/assets/images/small/img-2.jpg';
 import cardImg3 from '@/assets/images/small/img-3.jpg';
 import cardImg4 from '@/assets/images/small/img-4.jpg';
 import cardImg5 from '@/assets/images/small/img-5.jpg';
-
-// Sample search data
-const searchData = [
-  {
-    id: 1,
-    title: 'Modern Apartment in Downtown',
-    category: 'Apartment',
-    location: 'Downtown',
-    price: '$2,500/month',
-    bedrooms: 2,
-    bathrooms: 2,
-    garages: 1,
-    area: '1,200 sq ft',
-    depth: '2 floors',
-    image: cardImg,
-    description: 'Beautiful modern apartment with stunning city views. Recently renovated with high-end finishes.',
-    features: ['Balcony', 'Gym', 'Pool', 'Parking'],
-    rating: 4.5,
-    reviews: 28,
-    status: 'Available'
-  },
-  {
-    id: 2,
-    title: 'Luxury Villa with Ocean View',
-    category: 'Villa',
-    location: 'Beachfront',
-    price: '$5,200/month',
-    bedrooms: 4,
-    bathrooms: 3,
-    garages: 2,
-    area: '2,800 sq ft',
-    depth: '3 floors',
-    image: cardImg2,
-    description: 'Stunning luxury villa with panoramic ocean views. Private pool and beach access included.',
-    features: ['Ocean View', 'Private Pool', 'Beach Access', 'Garden'],
-    rating: 4.8,
-    reviews: 45,
-    status: 'Available'
-  },
-  {
-    id: 3,
-    title: 'Cozy Studio in Arts District',
-    category: 'Studio',
-    location: 'Arts District',
-    price: '$1,800/month',
-    bedrooms: 1,
-    bathrooms: 1,
-    garages: 0,
-    area: '650 sq ft',
-    depth: '1 floor',
-    image: cardImg3,
-    description: 'Perfect studio apartment in the vibrant arts district. Walking distance to galleries and cafes.',
-    features: ['Arts District', 'Walkable', 'Modern Kitchen', 'Storage'],
-    rating: 4.2,
-    reviews: 32,
-    status: 'Available'
-  },
-  {
-    id: 4,
-    title: 'Family Home in Suburbs',
-    category: 'House',
-    location: 'Suburbs',
-    price: '$3,800/month',
-    bedrooms: 3,
-    bathrooms: 2,
-    garages: 2,
-    area: '1,800 sq ft',
-    depth: '2 floors',
-    image: cardImg4,
-    description: 'Spacious family home in quiet suburban neighborhood. Large backyard and excellent schools nearby.',
-    features: ['Backyard', 'Garage', 'Good Schools', 'Quiet Area'],
-    rating: 4.6,
-    reviews: 38,
-    status: 'Available'
-  },
-  {
-    id: 5,
-    title: 'Penthouse with City Views',
-    category: 'Penthouse',
-    location: 'City Center',
-    price: '$8,500/month',
-    bedrooms: 3,
-    bathrooms: 3,
-    garages: 1,
-    area: '3,200 sq ft',
-    depth: '2 floors',
-    image: cardImg5,
-    description: 'Exclusive penthouse with breathtaking city skyline views. Luxury amenities and 24/7 concierge.',
-    features: ['City Views', 'Concierge', 'Rooftop Terrace', 'Luxury'],
-    rating: 4.9,
-    reviews: 52,
-    status: 'Available'
-  },
-  {
-    id: 6,
-    title: 'Loft in Industrial District',
-    category: 'Loft',
-    location: 'Industrial District',
-    price: '$2,200/month',
-    bedrooms: 2,
-    bathrooms: 1,
-    garages: 1,
-    area: '1,100 sq ft',
-    depth: '1 floor',
-    image: cardImg,
-    description: 'Converted industrial loft with high ceilings and exposed brick. Perfect for artists and creatives.',
-    features: ['High Ceilings', 'Exposed Brick', 'Industrial Style', 'Creative Space'],
-    rating: 4.3,
-    reviews: 25,
-    status: 'Available'
-  }
-];
 
 const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -150,38 +39,101 @@ const SearchPage = () => {
   const [sortBy, setSortBy] = useState('Relevance');
   const [viewMode, setViewMode] = useState('grid'); // grid or list
   const [currentPage, setCurrentPage] = useState(1);
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const itemsPerPage = 6;
 
+  // Fetch properties from backend
+  useEffect(() => {
+    fetchProperties();
+  }, []);
+
+  const fetchProperties = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/properties?limit=50`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setProperties(data.data.properties || []);
+      } else {
+        setError('Failed to fetch properties');
+      }
+    } catch (err) {
+      console.error('Error fetching properties:', err);
+      setError('Failed to fetch properties');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Transform backend data to match frontend format
+  const transformPropertyData = (property) => {
+    const fallbackImages = [cardImg, cardImg2, cardImg3, cardImg4, cardImg5];
+    const randomImage = fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
+    
+    return {
+      id: property._id,
+      title: property.title,
+      category: property.category || 'Property',
+      location: property.location?.city || 'Location not specified',
+      price: property.price ? `$${property.price.toLocaleString()}` : 'Price on request',
+      bedrooms: property.features?.bedrooms || 0,
+      bathrooms: property.features?.bathrooms || 0,
+      garages: property.features?.parking || 0,
+      area: property.features?.area ? `${property.features.area} sq ft` : 'Area not specified',
+      depth: property.features?.floors ? `${property.features.floors} floor${property.features.floors > 1 ? 's' : ''}` : 'Floor info not available',
+      image: property.images && property.images.length > 0 ? property.images[0].url : randomImage,
+      description: property.description || 'No description available',
+      features: property.amenities || ['Basic amenities'],
+      rating: 4.5, // Default rating since backend doesn't have this
+      reviews: Math.floor(Math.random() * 50) + 10, // Random reviews for demo
+      status: property.status || 'Available',
+      propertyFor: property.propertyFor || 'Not specified'
+    };
+  };
+
   // Get unique categories and locations for filters
-  const categories = ['All', ...new Set(searchData.map(item => item.category))];
-  const locations = ['All', ...new Set(searchData.map(item => item.location))];
+  const categories = ['All', ...new Set(properties.map(item => item.category).filter(Boolean))];
+  const locations = ['All', ...new Set(properties.map(item => item.location?.city).filter(Boolean))];
 
   // Filter and sort data
   const filteredData = useMemo(() => {
-    let filtered = searchData.filter(item => {
-      const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           item.location.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
-      const matchesLocation = selectedLocation === 'All' || item.location === selectedLocation;
-      
-      return matchesSearch && matchesCategory && matchesLocation;
-    });
+    let filtered = properties
+      .map(transformPropertyData)
+      .filter(item => {
+        const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                             item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                             item.location.toLowerCase().includes(searchTerm.toLowerCase());
+        
+        const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
+        const matchesLocation = selectedLocation === 'All' || item.location === selectedLocation;
+        
+        return matchesSearch && matchesCategory && matchesLocation;
+      });
 
     // Sort data
     switch (sortBy) {
       case 'Price Low to High':
-        filtered.sort((a, b) => parseInt(a.price.replace(/[^0-9]/g, '')) - parseInt(b.price.replace(/[^0-9]/g, '')));
+        filtered.sort((a, b) => {
+          const priceA = a.price === 'Price on request' ? 0 : parseInt(a.price.replace(/[^0-9]/g, ''));
+          const priceB = b.price === 'Price on request' ? 0 : parseInt(b.price.replace(/[^0-9]/g, ''));
+          return priceA - priceB;
+        });
         break;
       case 'Price High to Low':
-        filtered.sort((a, b) => parseInt(b.price.replace(/[^0-9]/g, '')) - parseInt(a.price.replace(/[^0-9]/g, '')));
+        filtered.sort((a, b) => {
+          const priceA = a.price === 'Price on request' ? 0 : parseInt(a.price.replace(/[^0-9]/g, ''));
+          const priceB = b.price === 'Price on request' ? 0 : parseInt(b.price.replace(/[^0-9]/g, ''));
+          return priceB - priceA;
+        });
         break;
       case 'Rating':
         filtered.sort((a, b) => b.rating - a.rating);
         break;
       case 'Newest':
-        filtered.sort((a, b) => b.id - a.id);
+        filtered.sort((a, b) => b.id.localeCompare(a.id));
         break;
       default:
         // Relevance - keep original order
@@ -189,7 +141,7 @@ const SearchPage = () => {
     }
 
     return filtered;
-  }, [searchTerm, selectedCategory, selectedLocation, sortBy]);
+  }, [properties, searchTerm, selectedCategory, selectedLocation, sortBy]);
 
   // Pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -208,6 +160,7 @@ const SearchPage = () => {
         <Image 
           src={item.image} 
           className="card-img-top" 
+          width={400}
           height={200} 
           alt={item.title}
           style={{ objectFit: 'cover' }}
@@ -302,6 +255,7 @@ const SearchPage = () => {
             <Image 
               src={item.image} 
               className="img-fluid rounded-start h-100" 
+              width={400}
               height={200}
               alt={item.title}
               style={{ objectFit: 'cover' }}
@@ -383,6 +337,54 @@ const SearchPage = () => {
       </Row>
     </Card>
   );
+
+  if (loading) {
+    return (
+      <>
+        <PublicHeader />
+        <Container fluid>
+          <Row className="mb-4">
+            <Col>
+              <h2 className="mb-1">Property Search</h2>
+              <p className="text-muted">Find your perfect property from our extensive collection</p>
+            </Col>
+          </Row>
+          <div className="text-center py-5">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+            <p className="mt-3">Loading properties...</p>
+          </div>
+        </Container>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <PublicHeader />
+        <Container fluid>
+          <Row className="mb-4">
+            <Col>
+              <h2 className="mb-1">Property Search</h2>
+              <p className="text-muted">Find your perfect property from our extensive collection</p>
+            </Col>
+          </Row>
+          <Card>
+            <CardBody className="text-center py-5">
+              <IconifyIcon icon="ri:error-warning-line" className="text-danger" style={{ fontSize: '3rem' }} />
+              <h5 className="mt-3">Error loading properties</h5>
+              <p className="text-muted">{error}</p>
+              <Button variant="primary" onClick={fetchProperties}>
+                Try Again
+              </Button>
+            </CardBody>
+          </Card>
+        </Container>
+      </>
+    );
+  }
 
   return (
     <>
@@ -488,14 +490,14 @@ const SearchPage = () => {
         {/* Search Results */}
         {currentData.length > 0 ? (
           <>
-                         {viewMode === 'grid' ? (
-               <Row className="g-4 mb-4">
-                 {currentData.map(item => (
-                   <Col key={item.id} lg={3} md={6}>
-                     <SearchCard item={item} />
-                   </Col>
-                 ))}
-               </Row>
+            {viewMode === 'grid' ? (
+              <Row className="g-4 mb-4">
+                {currentData.map(item => (
+                  <Col key={item.id} lg={3} md={6}>
+                    <SearchCard item={item} />
+                  </Col>
+                ))}
+              </Row>
             ) : (
               <div className="mb-4">
                 {currentData.map(item => (

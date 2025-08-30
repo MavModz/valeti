@@ -21,19 +21,42 @@ const validateProperty = [
     .isIn(['sale', 'rent', 'both'])
     .withMessage('Invalid property type'),
   body('category')
-    .isIn(['apartment', 'house', 'villa', 'condo', 'land', 'commercial', 'office'])
+    .isIn(['Single Story', 'Double Story'])
     .withMessage('Invalid property category'),
   body('price')
-    .isFloat({ min: 0 })
-    .withMessage('Price must be a positive number'),
+    .optional()
+    .custom((value) => {
+      if (value === undefined || value === null || value === '') {
+        return true; // Allow empty/undefined values
+      }
+      const numValue = parseFloat(value);
+      if (isNaN(numValue) || numValue < 0) {
+        throw new Error('Price must be a positive number');
+      }
+      return true;
+    }),
   body('location.address')
-    .trim()
-    .notEmpty()
-    .withMessage('Address is required'),
+    .optional()
+    .custom((value) => {
+      if (value === undefined || value === null || value === '') {
+        return true; // Allow empty/undefined values
+      }
+      if (value.trim().length < 10) {
+        throw new Error('Address must be at least 10 characters if provided');
+      }
+      return true;
+    }),
   body('location.city')
-    .trim()
-    .notEmpty()
-    .withMessage('City is required'),
+    .optional()
+    .custom((value) => {
+      if (value === undefined || value === null || value === '') {
+        return true; // Allow empty/undefined values
+      }
+      if (value.trim().length === 0) {
+        throw new Error('City cannot be empty if provided');
+      }
+      return true;
+    }),
   body('location.state')
     .trim()
     .notEmpty()
@@ -55,7 +78,7 @@ router.get('/', [
   query('page').optional().isInt({ min: 1 }).withMessage('Page must be a positive integer'),
   query('limit').optional().isInt({ min: 1, max: 100 }).withMessage('Limit must be between 1 and 100'),
   query('type').optional().isIn(['sale', 'rent', 'both']).withMessage('Invalid type filter'),
-  query('category').optional().isIn(['apartment', 'house', 'villa', 'condo', 'land', 'commercial', 'office']).withMessage('Invalid category filter'),
+  query('category').optional().isIn(['Single Story', 'Double Story']).withMessage('Invalid category filter'),
   query('minPrice').optional().isFloat({ min: 0 }).withMessage('Min price must be positive'),
   query('maxPrice').optional().isFloat({ min: 0 }).withMessage('Max price must be positive'),
   query('city').optional().trim().notEmpty().withMessage('City cannot be empty'),
@@ -165,6 +188,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
 router.post('/', auth, authorize('agent', 'admin'), validateProperty, asyncHandler(async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log('Validation errors:', errors.array());
     return res.status(400).json({
       success: false,
       message: 'Validation failed',
@@ -173,6 +197,7 @@ router.post('/', auth, authorize('agent', 'admin'), validateProperty, asyncHandl
   }
 
   const propertyData = req.body;
+  console.log('Received property data:', propertyData);
   
   // Set agent and owner based on user role
   if (req.user.role === 'agent') {

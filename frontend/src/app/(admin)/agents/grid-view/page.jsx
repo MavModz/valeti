@@ -4,9 +4,12 @@ import Link from 'next/link';
 import { Card, CardHeader, Col, Row } from 'react-bootstrap';
 import AgentData from './Components/AgentData';
 import AgentGridCard from './Components/AgentGridCard';
+import { Button } from 'react-bootstrap';
+
 export const metadata = {
   title: 'Agent Grid'
 };
+
 const GridViewPage = () => {
   return <>
       <PageTitle subName="Real Estate" title="Agent Grid" />
@@ -30,9 +33,11 @@ const GridViewPage = () => {
                     <button type="button" className="btn btn-outline-primary me-1">
                       <IconifyIcon icon="ri:filter-line" className="me-1" /> Filters
                     </button>
-                    <button type="button" className="btn btn-success me-1">
-                      <IconifyIcon icon="ri-add-line" /> New Agent
-                    </button>
+                    <Link href="/agents/add">
+                      <Button variant="success" className="me-1">
+                        <IconifyIcon icon="ri:add-line" /> New Agent
+                      </Button>
+                    </Link>
                   </div>
                 </Col>
               </Row>
@@ -74,4 +79,5 @@ const GridViewPage = () => {
       </div>
     </>;
 };
+
 export default GridViewPage;

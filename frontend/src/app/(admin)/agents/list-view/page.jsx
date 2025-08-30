@@ -2,9 +2,13 @@ import PageTitle from '@/components/PageTitle';
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
 import { Card, CardHeader, Col, Row } from 'react-bootstrap';
 import AgentList from './components/AgentList';
+import Link from 'next/link';
+import { Button } from 'react-bootstrap';
+
 export const metadata = {
   title: 'Agent List'
 };
+
 const ListViewPage = () => {
   return <>
       <PageTitle subName="Real Estate" title="Agent List" />
@@ -32,16 +36,11 @@ const ListViewPage = () => {
                 </Col>
                 <Col lg={6}>
                   <div className="text-md-end mt-3 mt-md-0">
-                    <button type="button" className="btn btn-outline-primary me-2">
-                      <IconifyIcon icon="ri:settings-2-line" className="me-1" />
-                      More Setting
-                    </button>
-                    <button type="button" className="btn btn-outline-primary me-2">
-                      <IconifyIcon icon="ri:filter-line" className="me-1" /> Filters
-                    </button>
-                    <button type="button" className="btn btn-success me-1">
-                      <IconifyIcon icon="ri:add-line" /> New Agent
-                    </button>
+                    <Link href="/agents/add">
+                      <Button variant="success">
+                        <IconifyIcon icon="ri:add-line" className="me-1" /> New Agent
+                      </Button>
+                    </Link>
                   </div>
                 </Col>
               </Row>
@@ -52,4 +51,5 @@ const ListViewPage = () => {
       <AgentList />
     </>;
 };
+
 export default ListViewPage;

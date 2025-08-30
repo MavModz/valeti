@@ -1,8 +1,12 @@
+'use client';
+
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
 import { getAllAgent } from '@/helpers/data';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button, Card, CardBody, CardFooter, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+
 const AgentCard = ({
   address,
   properties,
@@ -11,7 +15,17 @@ const AgentCard = ({
   return <Card>
       <CardBody>
         <div className="d-flex flex-wrap align-items-center gap-2 border-bottom pb-3">
-          {user?.avatar && <Image src={user.avatar} alt="avatar" className="avatar-lg rounded-3 border border-light border-3" />}
+          {user?.avatar && <Image 
+            src={user.avatar} 
+            alt="avatar" 
+            className="avatar-lg rounded-3 border border-light border-3"
+            width={80}
+            height={80}
+            style={{ objectFit: 'cover' }}
+            onError={(e) => {
+              e.target.src = '/assets/images/users/user-1.jpg';
+            }}
+          />}
           <div className="d-block">
             <Link href="" className="text-dark fw-medium fs-16">
               {user?.name}
@@ -43,44 +57,24 @@ const AgentCard = ({
         <h5 className="my-3">Social Media :</h5>
         <ul className="list-inline d-flex gap-1 mb-0 align-items-center">
           <li className="list-inline-item">
-            <Button variant="soft-primary" className="d-flex avatar-sm align-items-center justify-content-center fs-20">
-              <span>
-                {' '}
-                <IconifyIcon icon="ri:facebook-fill" />
-              </span>
-            </Button>
+            <Link href="" className="btn btn-sm btn-outline-primary rounded-circle">
+              <IconifyIcon icon="ri:facebook-fill" />
+            </Link>
           </li>
           <li className="list-inline-item">
-            <Button variant="soft-danger" className="d-flex avatar-sm align-items-center justify-content-center fs-20">
-              <span>
-                {' '}
-                <IconifyIcon icon="ri:instagram-line" />
-              </span>
-            </Button>
+            <Link href="" className="btn btn-sm btn-outline-info rounded-circle">
+              <IconifyIcon icon="ri:twitter-fill" />
+            </Link>
           </li>
           <li className="list-inline-item">
-            <Button variant="soft-info" className="d-flex avatar-sm align-items-center justify-content-center  fs-20">
-              <span>
-                {' '}
-                <IconifyIcon icon="ri:twitter-line" />
-              </span>
-            </Button>
+            <Link href="" className="btn btn-sm btn-outline-danger rounded-circle">
+              <IconifyIcon icon="ri:instagram-fill" />
+            </Link>
           </li>
           <li className="list-inline-item">
-            <Button variant="soft-success" className="d-flex avatar-sm align-items-center justify-content-center fs-20">
-              <span>
-                {' '}
-                <IconifyIcon icon="ri:whatsapp-line" />
-              </span>
-            </Button>
-          </li>
-          <li className="list-inline-item">
-            <Button variant="soft-warning" className="d-flex avatar-sm align-items-center justify-content-center fs-20">
-              <span>
-                {' '}
-                <IconifyIcon icon="ri:mail-line" />
-              </span>
-            </Button>
+            <Link href="" className="btn btn-sm btn-outline-primary rounded-circle">
+              <IconifyIcon icon="ri:linkedin-fill" />
+            </Link>
           </li>
         </ul>
       </CardBody>
@@ -100,14 +94,57 @@ const AgentCard = ({
       </CardFooter>
     </Card>;
 };
-const AgentData = async () => {
-  const agentCardData = await getAllAgent();
+
+const AgentData = () => {
+  const [agentCardData, setAgentCardData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getAllAgent();
+        console.log('🔍 Agent grid data fetched:', data);
+        setAgentCardData(data);
+      } catch (error) {
+        console.error('Error fetching agents:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-3 text-muted">Loading agents...</p>
+      </div>
+    );
+  }
+  
   return <>
-      <Row>
-        {agentCardData.map((item, idx) => <Col xl={4} lg={6} key={idx}>
-            <AgentCard {...item} />
-          </Col>)}
-      </Row>
+      {agentCardData && agentCardData.length > 0 ? (
+        <Row>
+          {agentCardData.map((item, idx) => <Col xl={4} lg={6} key={item.id || idx}>
+              <AgentCard {...item} />
+            </Col>)}
+        </Row>
+      ) : (
+        <div className="text-center py-5">
+          <IconifyIcon icon="solar:user-broken" className="fs-48 text-muted mb-3" />
+          <h4 className="text-muted">No Agents Found</h4>
+          <p className="text-muted">No agents have been added yet. Add your first agent to get started.</p>
+          <Link href="/agents/add" className="btn btn-primary">
+            <IconifyIcon icon="solar:add-circle-broken" className="me-2" />
+            Add Agent
+          </Link>
+        </div>
+      )}
     </>;
 };
+
 export default AgentData;

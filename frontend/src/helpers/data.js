@@ -5,15 +5,74 @@ import { todoData } from '@/assets/data/task';
 import { notificationsData } from '@/assets/data/topbar';
 import { sleep } from '@/utils/promise';
 import * as yup from 'yup';
+import { getAllProperties, getAllAgents, getAllCustomers } from '@/app/lib/Services/api';
+
 export const getNotifications = async () => {
   return notificationsData;
 };
+
 export const getAllUsers = async () => {
   return userData;
 };
+
 export const getAllProperty = async () => {
-  return propertyData;
+  try {
+    const response = await getAllProperties();
+    console.log('🔍 API Response:', response);
+    
+    if (response.success && response.data.properties) {
+      console.log('📋 Properties from API:', response.data.properties);
+      
+      // Transform API data to match the expected format
+      return response.data.properties.map(property => {
+        console.log('🏠 Processing property:', property);
+        
+        // Get the primary image or first image
+        const primaryImage = property.images?.find(img => img.isPrimary) || property.images?.[0];
+        const imageUrl = primaryImage?.url || '/assets/images/properties/p-1.jpg';
+        
+        console.log('🖼️ Image URL:', imageUrl);
+        console.log('🏗️ Features:', property.features);
+        
+        // Ensure we have valid numeric values
+        const beds = parseInt(property.features?.bedrooms) || 0;
+        const bath = parseInt(property.features?.bathrooms) || 0;
+        const size = parseInt(property.features?.area) || 0;
+        const flor = parseInt(property.features?.floors) || 0;
+        const price = parseFloat(property.price) || 0;
+        
+        const transformedProperty = {
+          id: property._id,
+          name: property.title || 'Untitled Property',
+          location: property.location?.address || 'Location not specified',
+          image: imageUrl,
+          icon: 'solar:home-bold-duotone',
+          beds: beds,
+          bath: bath,
+          size: size,
+          flor: flor,
+          price: price,
+          propertyType: property.category || 'Residences',
+          country: property.location?.city || 'Unknown',
+          type: property.type === 'rent' ? 'Rent' : property.type === 'sale' ? 'Sale' : 'Sale',
+          variant: property.type === 'rent' ? 'success' : property.type === 'sale' ? 'warning' : 'warning',
+          save: false
+        };
+        
+        console.log('✅ Transformed property:', transformedProperty);
+        return transformedProperty;
+      });
+    }
+    // Fallback to static data if API fails
+    console.log('⚠️ Using fallback static data');
+    return propertyData;
+  } catch (error) {
+    console.error('❌ Error fetching properties:', error);
+    // Fallback to static data
+    return propertyData;
+  }
 };
+
 export const getAllTransaction = async () => {
   const data = transactionData.map(item => {
     const user = userData.find(user => user.id === item.userId);
@@ -27,36 +86,138 @@ export const getAllTransaction = async () => {
   await sleep();
   return data;
 };
+
 export const getAllTimeline = async () => {
   await sleep();
   return timelineData;
 };
+
 export const getAllAgent = async () => {
-  const data = agentData.map(item => {
-    const user = userData.find(user => user.id == item.userId);
-    return {
-      ...item,
-      user
-    };
-  });
-  await sleep();
-  return data;
+  try {
+    const response = await getAllAgents();
+    console.log('🔍 Agent API Response:', response);
+    
+    if (response.success && response.data.agents) {
+      console.log('📋 Agents from API:', response.data.agents);
+      
+      // Transform API data to match the expected format
+      return response.data.agents.map(agent => {
+        console.log('👤 Processing agent:', agent);
+        
+        const transformedAgent = {
+          id: agent._id,
+          userId: agent._id,
+          address: `${agent.location?.city || 'Unknown'}, ${agent.location?.country || 'Unknown'}`,
+          experience: agent.experience || 0,
+          date: new Date(agent.createdAt),
+          properties: agent.propertiesNumber || 0,
+          user: {
+            id: agent._id,
+            name: `${agent.firstName} ${agent.lastName}`,
+            email: agent.email,
+            avatar: agent.profilePicture || '/assets/images/users/user-1.jpg',
+            contact: agent.phoneNumber || 'N/A',
+            status: agent.isActive ? 'Active' : 'Inactive'
+          }
+        };
+        
+        console.log('✅ Transformed agent:', transformedAgent);
+        return transformedAgent;
+      });
+    }
+    // Fallback to static data if API fails
+    console.log('⚠️ Using fallback static agent data');
+    const data = agentData.map(item => {
+      const user = userData.find(user => user.id == item.userId);
+      return {
+        ...item,
+        user
+      };
+    });
+    await sleep();
+    return data;
+  } catch (error) {
+    console.error('❌ Error fetching agents:', error);
+    // Fallback to static data
+    const data = agentData.map(item => {
+      const user = userData.find(user => user.id == item.userId);
+      return {
+        ...item,
+        user
+      };
+    });
+    await sleep();
+    return data;
+  }
 };
+
 export const getAllPricingPlans = async () => {
   await sleep();
   return pricingData;
 };
+
 export const getAllCustomer = async () => {
-  const data = customerData.map(item => {
-    const user = userData.find(user => user.id == item.userId);
-    return {
-      ...item,
-      user
-    };
-  });
-  await sleep();
-  return data;
+  try {
+    const response = await getAllCustomers();
+    console.log('🔍 Customer API Response:', response);
+    
+    if (response.success && response.data.customers) {
+      console.log('📋 Customers from API:', response.data.customers);
+      
+      // Transform API data to match the expected format
+      return response.data.customers.map(customer => {
+        console.log('👥 Processing customer:', customer);
+        
+        const transformedCustomer = {
+          id: customer._id,
+          userId: customer._id,
+          propertyType: customer.preferredPropertyType || 'Any',
+          interestedProperties: customer.viewProperties || 0,
+          customerStatus: customer.status || 'Active',
+          date: new Date(customer.createdAt),
+          propertyOwn: customer.ownProperties || 0,
+          propertyView: customer.viewProperties || 0,
+          invest: customer.investProperty || 0,
+          user: {
+            id: customer._id,
+            name: `${customer.firstName} ${customer.lastName}`,
+            email: customer.email,
+            avatar: customer.profilePicture || '/assets/images/users/user-1.jpg',
+            contact: customer.phoneNumber || 'N/A',
+            status: customer.isActive ? 'Active' : 'Inactive'
+          }
+        };
+        
+        console.log('✅ Transformed customer:', transformedCustomer);
+        return transformedCustomer;
+      });
+    }
+    // Fallback to static data if API fails
+    console.log('⚠️ Using fallback static customer data');
+    const data = customerData.map(item => {
+      const user = userData.find(user => user.id == item.userId);
+      return {
+        ...item,
+        user
+      };
+    });
+    await sleep();
+    return data;
+  } catch (error) {
+    console.error('❌ Error fetching customers:', error);
+    // Fallback to static data
+    const data = customerData.map(item => {
+      const user = userData.find(user => user.id == item.userId);
+      return {
+        ...item,
+        user
+      };
+    });
+    await sleep();
+    return data;
+  }
 };
+
 export const getAllReview = async () => {
   const data = customerReviewsData.map(item => {
     const user = userData.find(user => user.id === item.userId);
