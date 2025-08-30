@@ -1,0 +1,374 @@
+.hero-section {
+  height: 100vh;
+  min-height: 600px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 1s ease-out;
+}
+
+.hero-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.hero-image {
+  object-fit: cover !important;
+  object-position: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  transition: transform 0.8s ease;
+}
+
+.hero-image:hover {
+  transform: scale(1.05);
+}
+
+.hero-overlay {
+  background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.6) 100%);
+  animation: fadeIn 1.5s ease-out 0.3s both;
+}
+
+.hero-content {
+  max-width: 800px;
+  padding: 0 20px;
+  width: 100%;
+  animation: slideInUp 1s ease-out 0.5s both;
+}
+
+.text-shadow {
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.lot-tag {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  color: #212529;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 140px;
+  text-align: center;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.lot-tag:hover {
+  background: #e9ecef;
+  border-color: #dee2e6;
+  color: #212529;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.lot-tag:active {
+  transform: translateY(0);
+}
+
+.section-heading {
+  color: #212529 !important;
+  font-weight: 700;
+  animation: slideInLeft 0.8s ease-out;
+}
+
+.explore-link {
+  color: #212529 !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  animation: slideInRight 0.8s ease-out;
+}
+
+.explore-link:hover {
+  color: #000000 !important;
+  transform: translateX(3px);
+}
+
+/* Featured Plans Section Spacing */
+#featured-plans {
+  padding: 4rem 0;
+}
+
+#featured-plans .container {
+  max-width: 1200px;
+}
+
+#featured-plans .row {
+  margin-top: 2rem;
+}
+
+#featured-plans .col-lg-8 {
+  padding-right: 1rem;
+}
+
+#featured-plans .col-lg-4 {
+  padding-left: 1rem;
+}
+
+/* Floor Plan Styles */
+.floor-plan-card {
+  background: #f8f9fa;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.floor-plan-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  border-color: #dee2e6;
+}
+
+.featured-plan {
+  height: 500px;
+  position: relative;
+}
+
+.small-plan {
+  height: 240px;
+  position: relative;
+}
+
+.plan-tag {
+  z-index: 10;
+}
+
+.plan-tag .badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.featured-plan .plan-tag .badge {
+  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+}
+
+.small-plan .plan-tag .badge {
+  font-size: 0.7rem;
+  padding: 0.4rem 0.8rem;
+}
+
+.floor-plan-image {
+  height: 100%;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.small-image {
+  height: 100%;
+}
+
+.plan-image {
+  object-fit: cover !important;
+  object-position: center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.plan-overlay {
+  background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.9) 100%);
+  z-index: 5;
+  padding: 1.5rem !important;
+}
+
+.plan-details {
+  min-width: 240px;
+  z-index: 10;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.plan-details .fw-bold {
+  font-size: 1.1rem;
+  color: #212529;
+}
+
+.plan-details small {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.full-details-btn {
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+.full-details-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.orange-btn {
+  background: #fd7e14;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.orange-btn:hover {
+  background: #e8690b;
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(253, 126, 20, 0.4);
+}
+
+.explore-all-btn {
+  transition: all 0.3s ease;
+}
+
+.explore-all-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Section Transitions */
+.section-transition {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out;
+}
+
+.section-transition.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animation Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .hero-content {
+    max-width: 700px;
+    padding: 0 30px;
+  }
+}
+
+@media (max-width: 992px) {
+  .hero-content {
+    max-width: 600px;
+    padding: 0 25px;
+  }
+  
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    height: 70vh;
+    min-height: 500px;
+  }
+  
+  .hero-content {
+    max-width: 100%;
+    padding: 0 20px;
+  }
+  
+  .hero-content h1 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+  
+  .hero-content p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  .lot-tag {
+    min-width: 100px;
+    padding: 0.75rem 1rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-section {
+    height: 60vh;
+    min-height: 400px;
+  }
+  
+  .hero-content {
+    padding: 0 15px;
+  }
+  
+  .hero-content h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .hero-content p {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .lot-tag {
+    min-width: 90px;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.9rem;
+  }
+}

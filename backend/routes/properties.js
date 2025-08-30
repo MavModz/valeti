@@ -154,6 +154,50 @@ router.get('/', [
   });
 }));
 
+// @route   GET /api/properties/featured
+// @desc    Get featured properties
+// @access  Public
+router.get('/featured', asyncHandler(async (req, res) => {
+  const { limit = 6 } = req.query;
+
+  const properties = await Property.find({ 
+    isFeatured: true, 
+    isActive: true, 
+    status: 'available' 
+  })
+    .populate('agent', 'firstName lastName email profilePicture')
+    .sort({ createdAt: -1 })
+    .limit(parseInt(limit))
+    .lean();
+
+  res.json({
+    success: true,
+    data: { properties }
+  });
+}));
+
+// @route   GET /api/properties/random
+// @desc    Get random properties
+// @access  Public
+router.get('/random', asyncHandler(async (req, res) => {
+  const { limit = 6 } = req.query;
+
+  const properties = await Property.aggregate([
+    { $match: { isActive: true, status: 'available' } },
+    { $sample: { size: parseInt(limit) } }
+  ]);
+
+  // Populate agent information for each property
+  const populatedProperties = await Property.populate(properties, [
+    { path: 'agent', select: 'firstName lastName email profilePicture' }
+  ]);
+
+  res.json({
+    success: true,
+    data: { properties: populatedProperties }
+  });
+}));
+
 // @route   GET /api/properties/:id
 // @desc    Get property by ID
 // @access  Public
@@ -349,28 +393,6 @@ router.post('/:id/favorite', auth, asyncHandler(async (req, res) => {
     success: true,
     message: isFavorited ? 'Property removed from favorites' : 'Property added to favorites',
     data: { isFavorited: !isFavorited }
-  });
-}));
-
-// @route   GET /api/properties/featured
-// @desc    Get featured properties
-// @access  Public
-router.get('/featured', asyncHandler(async (req, res) => {
-  const { limit = 6 } = req.query;
-
-  const properties = await Property.find({ 
-    isFeatured: true, 
-    isActive: true, 
-    status: 'available' 
-  })
-    .populate('agent', 'firstName lastName email profilePicture')
-    .sort({ createdAt: -1 })
-    .limit(parseInt(limit))
-    .lean();
-
-  res.json({
-    success: true,
-    data: { properties }
   });
 }));
 

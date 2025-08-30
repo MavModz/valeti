@@ -131,6 +131,26 @@ export const getAllProperties = async (params = {}) => {
   }
 };
 
+// Get Random Properties
+export const getRandomProperties = async (limit = 6) => {
+  try {
+    const response = await commonrequest("GET", `${API_BASE_URL}/properties/random?limit=${limit}`, null, null, false);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Get Featured Properties
+export const getFeaturedProperties = async (limit = 3) => {
+  try {
+    const response = await commonrequest("GET", `${API_BASE_URL}/properties/featured?limit=${limit}`, null, null, false);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Get Property by ID
 export const getPropertyById = async (propertyId) => {
   try {
