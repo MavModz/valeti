@@ -54,8 +54,36 @@ const PropertyAdd = ({
                   onChange={(e) => setPropertyCategory(e.target.value)}
                 >
                   <option value="">Select Categories</option>
-                  <option value="Single Story">Single Story</option>
-                  <option value="Double Story">Double Story</option>
+                  
+                  {/* Standard Home Design Categories */}
+                  <option value="Singles">Singles</option>
+                  <option value="Doubles">Doubles</option>
+                  <option value="Farm House">Farm House</option>
+                  <option value="NDIS">NDIS</option>
+                  <option value="Small Lot Design">Small Lot Design</option>
+                  <option value="Corner Lot">Corner Lot</option>
+                  
+                  {/* Custom Homes Categories */}
+                  <option value="Architectural Design">Architectural Design</option>
+                  <option value="Sloping Lot Split Level Homes">Sloping Lot Split Level Homes</option>
+                  <option value="Uneven Lot">Uneven Lot</option>
+                  <option value="Knockdown Rebuild">Knockdown Rebuild</option>
+                  <option value="Renovation">Renovation</option>
+                  <option value="Rooming House">Rooming House</option>
+                  <option value="Sustainable Home">Sustainable Home</option>
+                  
+                  {/* Interior Categories */}
+                  <option value="Studio Aspirations">Studio Aspirations</option>
+                  
+                  {/* Multiunit Development Categories */}
+                  <option value="Side By Side">Side By Side</option>
+                  <option value="Back To Back">Back To Back</option>
+                  <option value="Multi Units">Multi Units</option>
+                  
+                  {/* Commercial Design Categories */}
+                  <option value="Apartments">Apartments</option>
+                  <option value="Warehouse">Warehouse</option>
+                  <option value="Office">Office</option>
                 </select>
                 {hasSubmitted && !propertyCategory && <div className="invalid-feedback">Please select a property category</div>}
               </Col>

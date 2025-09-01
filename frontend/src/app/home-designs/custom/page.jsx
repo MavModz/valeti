@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
 import PublicHeader from '@/components/layout/PublicHeader/page';
+import { generatePropertyUrl } from '@/utils/seo';
 import styles from '../page.module.css';
 
 // Import card images for fallback
@@ -313,9 +314,11 @@ const CustomHomesPage = () => {
         </div>
         
         <div className="mt-auto">
-          <Button variant="outline-primary" size="sm" className="w-100">
-            View Details
-          </Button>
+          <Link href={generatePropertyUrl(item.id, item.title)}>
+            <Button variant="outline-primary" size="sm" className="w-100">
+              View Details
+            </Button>
+          </Link>
         </div>
       </CardBody>
     </Card>
@@ -403,9 +406,11 @@ const CustomHomesPage = () => {
               )}
             </div>
             
-            <Button variant="outline-primary" size="sm">
-              View Details
-            </Button>
+                        <Link href={generatePropertyUrl(item.id, item.title)}>
+              <Button variant="outline-primary" size="sm">
+                View Details
+              </Button>
+            </Link>
           </CardBody>
         </Col>
       </Row>

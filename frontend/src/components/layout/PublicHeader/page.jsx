@@ -446,7 +446,6 @@ const PublicHeader = () => {
         .dropdown-item:hover {
           background-color: var(--bs-primary);
           color: white;
-          transform: translateX(5px);
         }
         
         /* Sub-dropdown Styles */
@@ -500,7 +499,6 @@ const PublicHeader = () => {
           background-color: var(--bs-primary);
           color: white;
           text-decoration: none;
-          transform: translateX(5px);
         }
         
                  .dropdown-submenu .sub-dropdown-menu {
@@ -537,11 +535,10 @@ const PublicHeader = () => {
            color: white;
          }
         
-        .dropdown-submenu .sub-dropdown-menu .dropdown-item:hover {
-          background-color: var(--bs-primary);
-          color: white;
-          transform: translateX(5px);
-        }
+                 .dropdown-submenu .sub-dropdown-menu .dropdown-item:hover {
+           background-color: var(--bs-primary);
+           color: white;
+         }
         
         /* Force sub-dropdown to appear to the right */
         .dropdown-submenu .sub-dropdown-menu,

@@ -23,6 +23,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
 import PublicHeader from '@/components/layout/PublicHeader/page';
+import { generatePropertyUrl } from '@/utils/seo';
 
 // Import card images for fallback
 import cardImg from '@/assets/images/small/img-1.jpg';
@@ -302,9 +303,11 @@ const SearchPage = () => {
         </div>
         
         <div className="mt-auto">
-          <Button variant="outline-primary" size="sm" className="w-100">
-            View Details
-          </Button>
+          <Link href={generatePropertyUrl(item.id, item.title)}>
+            <Button variant="outline-primary" size="sm" className="w-100">
+              View Details
+            </Button>
+          </Link>
         </div>
       </CardBody>
     </Card>
@@ -392,9 +395,11 @@ const SearchPage = () => {
               )}
             </div>
             
-            <Button variant="outline-primary" size="sm">
-              View Details
-            </Button>
+            <Link href={generatePropertyUrl(item.id, item.title)}>
+              <Button variant="outline-primary" size="sm">
+                View Details
+              </Button>
+            </Link>
           </CardBody>
         </Col>
       </Row>
