@@ -1,4 +1,4 @@
-import { agentData, customerData, customerReviewsData, dataTableRecords, pricingData, projectsData, propertyData, timelineData, transactionData, userData } from '@/assets/data/other';
+import { agentData, customerData, customerReviewsData, dataTableRecords, pricingData, projectsData, timelineData, transactionData, userData } from '@/assets/data/other';
 import { sellersData } from '@/assets/data/product';
 import { emailsData, socialGroupsData } from '@/assets/data/social';
 import { todoData } from '@/assets/data/task';
@@ -63,28 +63,47 @@ export const getAllProperty = async () => {
         return transformedProperty;
       });
     }
-    // Fallback to static data if API fails
-    console.log('⚠️ Using fallback static data');
-    return propertyData;
+    // Return empty array if no properties found
+    console.log('⚠️ No properties found in API response');
+    return [];
   } catch (error) {
     console.error('❌ Error fetching properties:', error);
-    // Fallback to static data
-    return propertyData;
+    // Return empty array on error instead of static data
+    return [];
   }
 };
 
 export const getAllTransaction = async () => {
-  const data = transactionData.map(item => {
-    const user = userData.find(user => user.id === item.userId);
-    const property = propertyData.find(property => property.id == item.propertyId);
-    return {
-      ...item,
-      user,
-      property
-    };
-  });
-  await sleep();
-  return data;
+  // Since we're not using static property data anymore, we'll need to fetch properties from API
+  try {
+    const propertiesResponse = await getAllProperties();
+    const properties = propertiesResponse.success ? propertiesResponse.data.properties : [];
+    
+    const data = transactionData.map(item => {
+      const user = userData.find(user => user.id === item.userId);
+      const property = properties.find(property => property._id == item.propertyId);
+      return {
+        ...item,
+        user,
+        property
+      };
+    });
+    await sleep();
+    return data;
+  } catch (error) {
+    console.error('Error fetching properties for transactions:', error);
+    // Return transactions without property data
+    const data = transactionData.map(item => {
+      const user = userData.find(user => user.id === item.userId);
+      return {
+        ...item,
+        user,
+        property: null
+      };
+    });
+    await sleep();
+    return data;
+  }
 };
 
 export const getAllTimeline = async () => {
@@ -219,17 +238,35 @@ export const getAllCustomer = async () => {
 };
 
 export const getAllReview = async () => {
-  const data = customerReviewsData.map(item => {
-    const user = userData.find(user => user.id === item.userId);
-    const property = propertyData.find(property => property.id == item.propertyId);
-    return {
-      ...item,
-      user,
-      property
-    };
-  });
-  await sleep();
-  return data;
+  try {
+    const propertiesResponse = await getAllProperties();
+    const properties = propertiesResponse.success ? propertiesResponse.data.properties : [];
+    
+    const data = customerReviewsData.map(item => {
+      const user = userData.find(user => user.id === item.userId);
+      const property = properties.find(property => property._id == item.propertyId);
+      return {
+        ...item,
+        user,
+        property
+      };
+    });
+    await sleep();
+    return data;
+  } catch (error) {
+    console.error('Error fetching properties for reviews:', error);
+    // Return reviews without property data
+    const data = customerReviewsData.map(item => {
+      const user = userData.find(user => user.id === item.userId);
+      return {
+        ...item,
+        user,
+        property: null
+      };
+    });
+    await sleep();
+    return data;
+  }
 };
 export const getUserById = async id => {
   const user = userData.find(user => user.id === id);

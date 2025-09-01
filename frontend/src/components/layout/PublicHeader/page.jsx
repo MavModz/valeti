@@ -58,43 +58,54 @@ const PublicHeader = () => {
       label: 'Home Designs',
       href: '#',
       dropdown: [
-        { label: 'Standard Home Design', href: '/home-designs/standard' },
+        {
+          label: 'Standard Home Design',
+          href: '/home-designs/standard', // Main category page
+          subDropdown: [
+            { label: 'Singles', href: '/home-designs/standard?category=Single%20Story', category: 'Singles' },
+            { label: 'Doubles', href: '/home-designs/standard?category=Double%20Story', category: 'Doubles' },
+            { label: 'Farm House', href: '/home-designs/standard?category=Farm%20House', category: 'Farm House' },
+            { label: 'NDIS', href: '/home-designs/standard?category=NDIS', category: 'NDIS' },
+            { label: 'Small Lot Design', href: '/home-designs/standard?category=Small%20Lot%20Design', category: 'Small Lot Design' },
+            { label: 'Corner Lot', href: '/home-designs/standard?category=Corner%20Lot', category: 'Corner Lot' }
+          ]
+        },
         {
           label: 'Custom Homes',
-          href: '/home-designs/custom',
+          href: '/home-designs/custom', // Main category page
           subDropdown: [
-            { label: 'Architectural Design', href: '/home-designs/custom/architectural' },
-            { label: 'Sloping Lot /Split Level Homes', href: '/home-designs/custom/sloping-lot' },
-            { label: 'Uneven Lot', href: '/home-designs/custom/uneven-lot' },
-            { label: 'Knockdown Rebuild', href: '/home-designs/custom/knockdown-rebuild' },
-            { label: 'Renovation', href: '/home-designs/custom/renovation' },
-            { label: 'Rooming House', href: '/home-designs/custom/rooming-house' },
-            { label: 'Sustainable Home', href: '/home-designs/custom/sustainable' }
+            { label: 'Architectural Design', href: '/home-designs/custom?category=Architectural%20Design', category: 'Architectural Design' },
+            { label: 'Sloping Lot /Split Level Homes', href: '/home-designs/custom?category=Sloping%20Lot%20Split%20Level%20Homes', category: 'Sloping Lot Split Level Homes' },
+            { label: 'Uneven Lot', href: '/home-designs/custom?category=Uneven%20Lot', category: 'Uneven Lot' },
+            { label: 'Knockdown Rebuild', href: '/home-designs/custom?category=Knockdown%20Rebuild', category: 'Knockdown Rebuild' },
+            { label: 'Renovation', href: '/home-designs/custom?category=Renovation', category: 'Renovation' },
+            { label: 'Rooming House', href: '/home-designs/custom?category=Rooming%20House', category: 'Rooming House' },
+            { label: 'Sustainable Home', href: '/home-designs/custom?category=Sustainable%20Home', category: 'Sustainable Home' }
           ]
         },
         {
           label: 'Interior',
-          href: '/home-designs/interior',
+          href: '/home-designs/interior', // Main category page
           subDropdown: [
-            { label: 'Studio/Aspirations', href: '/home-designs/interior/studio-aspirations' }
+            { label: 'Studio/Aspirations', href: '/home-designs/interior?category=Studio%20Aspirations', category: 'Studio Aspirations' }
           ]
         },
         {
           label: 'Multiunit Development',
-          href: '/home-designs/multiunit',
+          href: '/home-designs/multiunit', // Main category page
           subDropdown: [
-            { label: 'Side By Side', href: '/home-designs/multiunit/side-by-side' },
-            { label: 'Back To Back', href: '/home-designs/multiunit/back-to-back' },
-            { label: 'Multi Units', href: '/home-designs/multiunit/multi-units' }
+            { label: 'Side By Side', href: '/home-designs/multiunit?category=Side%20By%20Side', category: 'Side By Side' },
+            { label: 'Back To Back', href: '/home-designs/multiunit?category=Back%20To%20Back', category: 'Back To Back' },
+            { label: 'Multi Units', href: '/home-designs/multiunit?category=Multi%20Units', category: 'Multi Units' }
           ]
         },
         {
           label: 'Commercial Design',
-          href: '/home-designs/commercial',
+          href: '/home-designs/commercial', // Main category page
           subDropdown: [
-            { label: 'Apartments', href: '/home-designs/commercial/apartments' },
-            { label: 'Warehouse', href: '/home-designs/commercial/warehouse' },
-            { label: 'Office', href: '/home-designs/commercial/office' }
+            { label: 'Apartments', href: '/home-designs/commercial?category=Apartments', category: 'Apartments' },
+            { label: 'Warehouse', href: '/home-designs/commercial?category=Warehouse', category: 'Warehouse' },
+            { label: 'Office', href: '/home-designs/commercial?category=Office', category: 'Office' }
           ]
         }
       ]
@@ -114,11 +125,11 @@ const PublicHeader = () => {
       dropdown: [
         {
           label: 'Portfolio',
-          href: '/client-journey/portfolio',
+          href: '#', // No direct link, only subdropdown items have links
           subDropdown: [
-            { label: 'Completed Project', href: '/client-journey/portfolio/completed-project' },
-            { label: 'Virtual 360 Tour', href: '/client-journey/portfolio/virtual-360-tour' },
-            { label: 'Display Homes', href: '/client-journey/portfolio/display-homes' }
+            { label: 'Completed Project', href: '/client-journey/completed-project' },
+            { label: 'Virtual 360 Tour', href: '/client-journey/virtual-360-tour' },
+            { label: 'Display Homes', href: '/client-journey/display-homes' }
           ]
         },
         { label: 'Step By Step Process', href: '/client-journey/step-by-step-process' },

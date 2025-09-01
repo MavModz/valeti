@@ -21,8 +21,10 @@ import {
 } from 'react-bootstrap';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
 import PublicHeader from '@/components/layout/PublicHeader/page';
+import styles from '../page.module.css';
 
 // Import card images for fallback
 import cardImg from '@/assets/images/small/img-1.jpg';
@@ -31,9 +33,11 @@ import cardImg3 from '@/assets/images/small/img-3.jpg';
 import cardImg4 from '@/assets/images/small/img-4.jpg';
 import cardImg5 from '@/assets/images/small/img-5.jpg';
 
-const SearchPage = () => {
+const CustomHomesPage = () => {
+  const searchParams = useSearchParams();
+  const category = searchParams.get('category') || 'All';
+  
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedLocation, setSelectedLocation] = useState('All');
   const [priceRange, setPriceRange] = useState('All');
   const [sortBy, setSortBy] = useState('Relevance');
@@ -47,46 +51,30 @@ const SearchPage = () => {
   // Fetch properties from backend
   useEffect(() => {
     fetchProperties();
-    
-    // Read page from URL on initial load
-    const url = new URL(window.location);
-    const pageFromUrl = parseInt(url.searchParams.get('page'));
-    if (pageFromUrl && pageFromUrl > 0) {
-      setCurrentPage(pageFromUrl);
-    }
-  }, []);
-  
-  // Reset to first page when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, selectedCategory, selectedLocation]);
-  
-  // Update URL when page changes
-  useEffect(() => {
-    const url = new URL(window.location);
-    if (currentPage > 1) {
-      url.searchParams.set('page', currentPage);
-    } else {
-      url.searchParams.delete('page');
-    }
-    window.history.replaceState({}, '', url);
-  }, [currentPage]);
+  }, [category]);
 
   const fetchProperties = async () => {
     try {
       setLoading(true);
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
-      console.log('🔍 Fetching properties from:', `${backendUrl}/api/properties?limit=100`);
       
-      const response = await fetch(`${backendUrl}/api/properties?limit=100`);
+      // Build query parameters - Custom Homes includes various categories
+      const params = new URLSearchParams();
+      params.append('limit', '100');
+      if (category && category !== 'All') {
+        params.append('category', category);
+      }
+      
+      console.log('🔍 Fetching Custom Homes properties from:', `${backendUrl}/api/properties?${params.toString()}`);
+      
+      const response = await fetch(`${backendUrl}/api/properties?${params.toString()}`);
       console.log('📡 Response status:', response.status);
-      console.log('📡 Response headers:', response.headers);
       
       const data = await response.json();
       console.log('📋 Response data:', data);
       
       if (data.success) {
-        console.log('✅ Properties fetched successfully:', data.data.properties?.length || 0, 'properties');
+        console.log('✅ Custom Homes properties fetched successfully:', data.data.properties?.length || 0, 'properties');
         setProperties(data.data.properties || []);
       } else {
         console.error('❌ API returned error:', data.message);
@@ -126,18 +114,14 @@ const SearchPage = () => {
     };
   };
 
-  // Get unique categories and locations for filters
-  console.log('🏠 Raw properties from API:', properties);
-  const categories = ['All', ...new Set(properties.map(item => item.category).filter(Boolean))];
+  // Get unique locations for filters
   const locations = ['All', ...new Set(properties.map(item => item.location?.city || item.location).filter(Boolean))];
-  console.log('🏷️ Categories found:', categories);
-  console.log('📍 Locations found:', locations);
 
   // Filter and sort data
   const filteredData = useMemo(() => {
-    console.log('🔍 Filtering properties with:', {
+    console.log('🔍 Filtering Custom Homes properties with:', {
       searchTerm,
-      selectedCategory,
+      category,
       selectedLocation,
       totalProperties: properties.length
     });
@@ -149,10 +133,9 @@ const SearchPage = () => {
                              item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                              item.location.toLowerCase().includes(searchTerm.toLowerCase());
         
-        const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
         const matchesLocation = selectedLocation === 'All' || item.location === selectedLocation;
         
-        return matchesSearch && matchesCategory && matchesLocation;
+        return matchesSearch && matchesLocation;
       });
     
     console.log('✅ Filtered data result:', filtered.length, 'properties');
@@ -163,46 +146,50 @@ const SearchPage = () => {
     }
     
     return filtered;
+  }, [properties, searchTerm, category, selectedLocation, currentPage]);
 
-    // Sort data
+  // Sort data
+  const sortedData = useMemo(() => {
+    let sorted = [...filteredData];
+    
     switch (sortBy) {
       case 'Price Low to High':
-        filtered.sort((a, b) => {
+        sorted.sort((a, b) => {
           const priceA = a.price === 'Price on request' ? 0 : parseInt(a.price.replace(/[^0-9]/g, ''));
           const priceB = b.price === 'Price on request' ? 0 : parseInt(b.price.replace(/[^0-9]/g, ''));
           return priceA - priceB;
         });
         break;
       case 'Price High to Low':
-        filtered.sort((a, b) => {
+        sorted.sort((a, b) => {
           const priceA = a.price === 'Price on request' ? 0 : parseInt(a.price.replace(/[^0-9]/g, ''));
           const priceB = b.price === 'Price on request' ? 0 : parseInt(b.price.replace(/[^0-9]/g, ''));
           return priceB - priceA;
         });
         break;
       case 'Rating':
-        filtered.sort((a, b) => b.rating - a.rating);
+        sorted.sort((a, b) => b.rating - a.rating);
         break;
       case 'Newest':
-        filtered.sort((a, b) => b.id.localeCompare(a.id));
+        sorted.sort((a, b) => b.id.localeCompare(a.id));
         break;
       default:
         // Relevance - keep original order
         break;
     }
-
-    return filtered;
-  }, [properties, searchTerm, selectedCategory, selectedLocation, sortBy]);
+    
+    return sorted;
+  }, [filteredData, sortBy]);
 
   // Pagination
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const currentData = filteredData.slice(
+  const totalPages = Math.ceil(sortedData.length / itemsPerPage);
+  const currentData = sortedData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
   
   console.log('📄 Pagination info:', {
-    totalProperties: filteredData.length,
+    totalProperties: sortedData.length,
     itemsPerPage,
     totalPages,
     currentPage,
@@ -217,26 +204,50 @@ const SearchPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedLocation]);
+
+  // Update URL when page changes
+  useEffect(() => {
+    const url = new URL(window.location);
+    if (currentPage > 1) {
+      url.searchParams.set('page', currentPage);
+    } else {
+      url.searchParams.delete('page');
+    }
+    window.history.replaceState({}, '', url);
+  }, [currentPage]);
+
+  // Read page from URL on initial load
+  useEffect(() => {
+    const url = new URL(window.location);
+    const pageFromUrl = parseInt(url.searchParams.get('page'));
+    if (pageFromUrl && pageFromUrl > 0) {
+      setCurrentPage(pageFromUrl);
+    }
+  }, []);
+
   const SearchCard = ({ item }) => (
-    <Card className="h-100 shadow-sm hover-shadow">
+    <Card className={`h-100 shadow-sm ${styles.hoverShadow}`}>
       <div className="position-relative">
         <Image 
           src={item.image} 
-          className="card-img-top" 
+          className={`card-img-top ${styles.cardImage}`}
           width={400}
           height={200} 
           alt={item.title}
-          style={{ objectFit: 'cover' }}
         />
         <Badge 
           bg="success" 
-          className="position-absolute top-0 end-0 m-2"
+          className={`position-absolute top-0 end-0 m-2 ${styles.statusBadge}`}
         >
           {item.status}
         </Badge>
         <Badge 
           bg="primary" 
-          className="position-absolute top-0 start-0 m-2"
+          className={`position-absolute top-0 start-0 m-2 ${styles.categoryBadge}`}
         >
           {item.category}
         </Badge>
@@ -408,12 +419,15 @@ const SearchPage = () => {
         <Container fluid>
           <Row className="mb-4">
             <Col>
-              <h2 className="mb-1">Property Search</h2>
-              <p className="text-muted">Find your perfect property from our extensive collection</p>
+              <h2 className="mb-1">
+                Custom Homes
+                {category !== 'All' && ` - ${category}`}
+              </h2>
+              <p className="text-muted">Discover our collection of beautiful custom home designs</p>
             </Col>
           </Row>
           <div className="text-center py-5">
-            <Spinner animation="border" role="status">
+            <Spinner animation="border" role="status" className={styles.loadingSpinner}>
               <span className="visually-hidden">Loading...</span>
             </Spinner>
             <p className="mt-3">Loading properties...</p>
@@ -430,13 +444,16 @@ const SearchPage = () => {
         <Container fluid>
           <Row className="mb-4">
             <Col>
-              <h2 className="mb-1">Property Search</h2>
-              <p className="text-muted">Find your perfect property from our extensive collection</p>
+              <h2 className="mb-1">
+                Custom Homes
+                {category !== 'All' && ` - ${category}`}
+              </h2>
+              <p className="text-muted">Discover our collection of beautiful custom home designs</p>
             </Col>
           </Row>
           <Card>
             <CardBody className="text-center py-5">
-              <IconifyIcon icon="ri:error-warning-line" className="text-danger" style={{ fontSize: '3rem' }} />
+              <IconifyIcon icon="ri:error-warning-line" className={styles.errorIcon} style={{ fontSize: '3rem' }} />
               <h5 className="mt-3">Error loading properties</h5>
               <p className="text-muted">{error}</p>
               <Button variant="primary" onClick={fetchProperties}>
@@ -457,16 +474,19 @@ const SearchPage = () => {
         {/* Page Title */}
         <Row className="mb-4">
           <Col>
-            <h2 className="mb-1">Property Search</h2>
-            <p className="text-muted">Find your perfect property from our extensive collection</p>
+            <h2 className="mb-1">
+              Custom Homes
+              {category !== 'All' && ` - ${category}`}
+            </h2>
+            <p className="text-muted">Discover our collection of beautiful custom home designs</p>
           </Col>
         </Row>
         
         {/* Search Header */}
-        <Card className="mb-4">
+        <Card className={`mb-4 ${styles.searchHeader}`}>
           <CardBody>
             <Row className="g-3">
-              <Col md={6}>
+              <Col md={8}>
                 <InputGroup>
                   <InputGroup.Text>
                     <IconifyIcon icon="ri:search-line" />
@@ -478,16 +498,6 @@ const SearchPage = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </InputGroup>
-              </Col>
-              <Col md={2}>
-                <Form.Select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                >
-                  {categories.map(category => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </Form.Select>
               </Col>
               <Col md={2}>
                 <Form.Select
@@ -513,8 +523,8 @@ const SearchPage = () => {
         <Row className="mb-4">
           <Col md={8}>
             <div className="d-flex align-items-center gap-3">
-              <span className="text-muted">
-                {filteredData.length} properties found
+              <span className={`text-muted ${styles.paginationInfo}`}>
+                {sortedData.length} properties found
                 {totalPages > 1 && (
                   <span className="ms-2">
                     (Page {currentPage} of {totalPages})
@@ -525,6 +535,7 @@ const SearchPage = () => {
                 <Button
                   variant={viewMode === 'grid' ? 'primary' : 'outline-primary'}
                   size="sm"
+                  className={styles.viewToggleButton}
                   onClick={() => setViewMode('grid')}
                 >
                   <IconifyIcon icon="ri:grid-line" />
@@ -532,6 +543,7 @@ const SearchPage = () => {
                 <Button
                   variant={viewMode === 'list' ? 'primary' : 'outline-primary'}
                   size="sm"
+                  className={styles.viewToggleButton}
                   onClick={() => setViewMode('list')}
                 >
                   <IconifyIcon icon="ri:list-check" />
@@ -541,7 +553,7 @@ const SearchPage = () => {
           </Col>
           <Col md={4} className="text-end">
             <Dropdown>
-              <DropdownToggle variant="outline-secondary" size="sm">
+              <DropdownToggle variant="outline-secondary" size="sm" className={styles.sortDropdown}>
                 Sort by: {sortBy}
               </DropdownToggle>
               <DropdownMenu>
@@ -580,7 +592,7 @@ const SearchPage = () => {
                 <Col>
                   <div className="d-flex justify-content-between align-items-center">
                     <small className="text-muted">
-                      Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} properties
+                      Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, sortedData.length)} of {sortedData.length} properties
                     </small>
                     <Pagination className="mb-0">
                       <Pagination.Prev 
@@ -638,7 +650,7 @@ const SearchPage = () => {
         ) : (
           <Card>
             <CardBody className="text-center py-5">
-              <IconifyIcon icon="ri:search-line" className="text-muted" style={{ fontSize: '3rem' }} />
+              <IconifyIcon icon="ri:search-line" className={styles.searchIcon} style={{ fontSize: '3rem' }} />
               <h5 className="mt-3">No properties found</h5>
               <p className="text-muted">
                 Try adjusting your search criteria or filters to find more properties.
@@ -647,7 +659,6 @@ const SearchPage = () => {
                 variant="outline-primary" 
                 onClick={() => {
                   setSearchTerm('');
-                  setSelectedCategory('All');
                   setSelectedLocation('All');
                 }}
               >
@@ -661,4 +672,4 @@ const SearchPage = () => {
   );
 };
 
-export default SearchPage;
+export default CustomHomesPage;
