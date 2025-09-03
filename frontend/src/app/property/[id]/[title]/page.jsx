@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Head from 'next/head';
-import { Container, Row, Col, Card, CardBody, Spinner, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, CardBody, Spinner, Alert, Modal, Button } from 'react-bootstrap';
 import Image from 'next/image';
 import Link from 'next/link';
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
@@ -19,6 +19,12 @@ const PublicPropertyDetailsPage = () => {
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [panPosition, setPanPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -60,6 +66,150 @@ const PublicPropertyDetailsPage = () => {
     }
   }, [propertyId, propertyTitle, router]);
 
+  // Reset zoom when image changes
+  useEffect(() => {
+    setZoomLevel(1);
+    setPanPosition({ x: 0, y: 0 });
+  }, [currentImageIndex]);
+
+  // Keyboard shortcuts for zoom
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!showImageModal) return;
+      
+      switch (e.key) {
+        case '+':
+        case '=':
+          e.preventDefault();
+          handleZoomIn();
+          break;
+        case '-':
+          e.preventDefault();
+          handleZoomOut();
+          break;
+        case '0':
+          e.preventDefault();
+          handleResetZoom();
+          break;
+        case 'Escape':
+          handleCloseModal();
+          break;
+        case 'ArrowLeft':
+          if (property?.images && property.images.length > 1) {
+            e.preventDefault();
+            handlePreviousImage();
+          }
+          break;
+        case 'ArrowRight':
+          if (property?.images && property.images.length > 1) {
+            e.preventDefault();
+            handleNextImage();
+          }
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [showImageModal, property?.images]);
+
+  if (loading) {
+    return (
+      <>
+        <PublicHeader />
+        <Container className="py-5">
+          <div className="text-center">
+            <Spinner animation="border" role="status" className="text-primary">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+            <p className="mt-3">Loading property details...</p>
+          </div>
+        </Container>
+      </>
+    );
+  }
+
+  if (error || !property) {
+    return (
+      <>
+        <PublicHeader />
+        <Container className="py-5">
+          <Alert variant="danger">
+            <Alert.Heading>Error</Alert.Heading>
+            <p>{error || 'Property not found'}</p>
+            <Link href="/search" className="btn btn-primary">
+              Back to Search
+            </Link>
+          </Alert>
+        </Container>
+      </>
+    );
+  }
+
+  // Image modal functions
+  const handleImageClick = (index = 0) => {
+    setCurrentImageIndex(index);
+    setShowImageModal(true);
+  };
+
+  const handlePreviousImage = () => {
+    setCurrentImageIndex(prev => 
+      prev === 0 ? (property?.images?.length || 1) - 1 : prev - 1
+    );
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex(prev => 
+      prev === (property?.images?.length || 1) - 1 ? 0 : prev + 1
+    );
+  };
+
+  const handleCloseModal = () => {
+    setShowImageModal(false);
+    setCurrentImageIndex(0);
+    setZoomLevel(1);
+    setPanPosition({ x: 0, y: 0 });
+  };
+
+  // Zoom functions
+  const handleZoomIn = () => {
+    setZoomLevel(prev => Math.min(prev * 1.5, 5));
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel(prev => Math.max(prev / 1.5, 0.5));
+  };
+
+  const handleResetZoom = () => {
+    setZoomLevel(1);
+    setPanPosition({ x: 0, y: 0 });
+  };
+
+  // Pan functions
+  const handleMouseDown = (e) => {
+    if (zoomLevel > 1) {
+      setIsDragging(true);
+      setDragStart({
+        x: e.clientX - panPosition.x,
+        y: e.clientY - panPosition.y
+      });
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging && zoomLevel > 1) {
+      setPanPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // Early returns for loading and error states
   if (loading) {
     return (
       <>
@@ -104,6 +254,7 @@ const PublicPropertyDetailsPage = () => {
     location: property.location || {}
   };
 
+  // Render main content
   return (
     <>
       <Head>
@@ -137,14 +288,26 @@ const PublicPropertyDetailsPage = () => {
               <CardBody>
                 <div className="position-relative">
                   {transformedProperty.images && transformedProperty.images.length > 0 ? (
-                    <Image 
-                      src={transformedProperty.images[0].url} 
-                      alt={transformedProperty.title || 'Property'} 
-                      width={800}
-                      height={500}
-                      className="img-fluid rounded w-100"
-                      style={{ objectFit: 'cover', height: '400px' }}
-                    />
+                    <div 
+                      className="position-relative cursor-pointer"
+                      onClick={() => handleImageClick(0)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <Image 
+                        src={transformedProperty.images[0].url} 
+                        alt={transformedProperty.title || 'Property'} 
+                        width={800}
+                        height={500}
+                        className="img-fluid rounded w-100"
+                        style={{ objectFit: 'cover', height: '400px' }}
+                      />
+                      <div className="position-absolute top-0 end-0 m-2">
+                        <span className="badge bg-dark bg-opacity-75 text-white px-2 py-1 fs-12">
+                          <IconifyIcon icon="bx:expand" className="me-1" />
+                          Click to view
+                        </span>
+                      </div>
+                    </div>
                   ) : (
                     <div className="bg-light rounded d-flex align-items-center justify-content-center" style={{ height: '400px' }}>
                       <IconifyIcon icon="ri:image-line" className="fs-1 text-muted" />
@@ -156,6 +319,36 @@ const PublicPropertyDetailsPage = () => {
                     </span>
                   </span>
                 </div>
+
+                {/* Thumbnail gallery */}
+                {transformedProperty.images && transformedProperty.images.length > 1 && (
+                  <div className="d-flex gap-2 mt-3 overflow-auto">
+                    {transformedProperty.images.map((image, index) => (
+                      <div 
+                        key={index}
+                        className="position-relative cursor-pointer"
+                        onClick={() => handleImageClick(index)}
+                        style={{ cursor: 'pointer', minWidth: '80px' }}
+                      >
+                        <Image 
+                          src={image.url} 
+                          alt={`${transformedProperty.title || 'Property'} - Image ${index + 1}`}
+                          width={80}
+                          height={60}
+                          className="img-fluid rounded border"
+                          style={{ objectFit: 'cover', height: '60px' }}
+                        />
+                        {index === 0 && (
+                          <span className="position-absolute top-0 start-0 m-1">
+                            <span className="badge bg-primary bg-opacity-75 text-white px-1 py-0 fs-10">
+                              Main
+                            </span>
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 <div className="d-flex flex-wrap justify-content-between my-3 gap-2">
                   <div>
@@ -342,6 +535,172 @@ const PublicPropertyDetailsPage = () => {
           </Col>
         </Row>
       </Container>
+
+      {/* Full Screen Image Modal */}
+      <Modal 
+        show={showImageModal} 
+        onHide={handleCloseModal}
+        size="xl"
+        centered
+        className="image-preview-modal"
+      >
+        <Modal.Header closeButton className="border-0 text-white">
+          <div className="d-flex align-items-center justify-content-between w-100">
+            <Modal.Title className="text-white">
+              {transformedProperty.title || 'Property'} - Image {currentImageIndex + 1} of {transformedProperty.images?.length || 1}
+            </Modal.Title>
+            <div className="d-flex gap-2">
+              <Button
+                variant="outline-light"
+                size="sm"
+                onClick={handleZoomOut}
+                disabled={zoomLevel <= 0.5}
+                title="Zoom Out"
+              >
+                <IconifyIcon icon="bx:minus" />
+              </Button>
+              <Button
+                variant="outline-light"
+                size="sm"
+                onClick={handleResetZoom}
+                title="Reset Zoom"
+              >
+                <IconifyIcon icon="bx:refresh" />
+              </Button>
+              <Button
+                variant="outline-light"
+                size="sm"
+                onClick={handleZoomIn}
+                disabled={zoomLevel >= 5}
+                title="Zoom In"
+              >
+                <IconifyIcon icon="bx:plus" />
+              </Button>
+              <span className="text-white-50 d-flex align-items-center px-2">
+                {Math.round(zoomLevel * 100)}%
+              </span>
+            </div>
+          </div>
+        </Modal.Header>
+        <Modal.Body className="p-0">
+          <div 
+            className="position-relative overflow-hidden"
+            style={{ 
+              height: '80vh',
+              cursor: zoomLevel > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default'
+            }}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
+            {transformedProperty.images && transformedProperty.images[currentImageIndex] ? (
+              <div
+                className="d-flex align-items-center justify-content-center h-100"
+                style={{
+                  transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
+                  transformOrigin: 'center center',
+                  transition: isDragging ? 'none' : 'transform 0.1s ease-out'
+                }}
+              >
+                <Image 
+                  src={transformedProperty.images[currentImageIndex].url} 
+                  alt={`${transformedProperty.title || 'Property'} - Image ${currentImageIndex + 1}`}
+                  width={1200}
+                  height={800}
+                  className="img-fluid"
+                  style={{ 
+                    objectFit: 'contain',
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    userSelect: 'none',
+                    pointerEvents: 'none'
+                  }}
+                />
+              </div>
+            ) : (
+              <div className="d-flex align-items-center justify-content-center h-100">
+                <IconifyIcon icon="ri:image-line" className="fs-1 text-muted" />
+              </div>
+            )}
+            
+            {/* Navigation arrows */}
+            {transformedProperty.images && transformedProperty.images.length > 1 && (
+              <>
+                <Button
+                  variant="dark"
+                  className="position-absolute top-50 start-0 translate-middle-y ms-3 bg-dark bg-opacity-75 border-0"
+                  onClick={handlePreviousImage}
+                  style={{ zIndex: 10 }}
+                >
+                  <IconifyIcon icon="bx:chevron-left" />
+                </Button>
+                <Button
+                  variant="dark"
+                  className="position-absolute top-50 end-0 translate-middle-y me-3 bg-dark bg-opacity-75 border-0"
+                  onClick={handleNextImage}
+                  style={{ zIndex: 10 }}
+                >
+                  <IconifyIcon icon="bx:chevron-right" />
+                </Button>
+              </>
+            )}
+
+            {/* Zoom indicator */}
+            {zoomLevel > 1 && (
+              <div className="position-absolute bottom-0 start-0 m-3">
+                <span className="badge bg-dark bg-opacity-75 text-white px-2 py-1">
+                  <IconifyIcon icon="bx:move" className="me-1" />
+                  Drag to pan
+                </span>
+              </div>
+            )}
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="border-0 text-white justify-content-center">
+          <div className="d-flex flex-column align-items-center gap-3 w-100">
+            {/* Thumbnail navigation */}
+            <div className="d-flex gap-2">
+              {transformedProperty.images && transformedProperty.images.map((image, index) => (
+                <div 
+                  key={index}
+                  className={`position-relative cursor-pointer ${index === currentImageIndex ? 'border border-white' : ''}`}
+                  onClick={() => setCurrentImageIndex(index)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <Image 
+                    src={image.url} 
+                    alt={`Thumbnail ${index + 1}`}
+                    width={60}
+                    height={40}
+                    className="img-fluid rounded"
+                    style={{ objectFit: 'cover', height: '40px', width: '60px' }}
+                  />
+                  {index === currentImageIndex && (
+                    <div className="position-absolute top-50 start-50 translate-middle">
+                      <IconifyIcon icon="bx:check" className="text-white fs-5" />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            {/* Keyboard shortcuts help */}
+            <div className="text-center">
+              <small className="text-white-50">
+                <strong>Keyboard Shortcuts:</strong> 
+                <span className="ms-2">
+                  <kbd className="bg-secondary">+</kbd> Zoom In • 
+                  <kbd className="bg-secondary">-</kbd> Zoom Out • 
+                  <kbd className="bg-secondary">0</kbd> Reset • 
+                  <kbd className="bg-secondary">←→</kbd> Navigate • 
+                  <kbd className="bg-secondary">ESC</kbd> Close
+                </span>
+              </small>
+            </div>
+          </div>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

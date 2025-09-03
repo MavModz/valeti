@@ -56,8 +56,8 @@ const PropertyAdd = ({
                   <option value="">Select Categories</option>
                   
                   {/* Standard Home Design Categories */}
-                  <option value="Singles">Singles</option>
-                  <option value="Doubles">Doubles</option>
+                  <option value="Single Story">Singles</option>
+                  <option value="Double Story">Doubles</option>
                   <option value="Farm House">Farm House</option>
                   <option value="NDIS">NDIS</option>
                   <option value="Small Lot Design">Small Lot Design</option>
@@ -140,9 +140,19 @@ const PropertyAdd = ({
                     id="property-bedroom" 
                     className={`form-control ${errors.bedrooms ? 'is-invalid' : ''}`}
                     placeholder="0"
-                    {...register('bedrooms')}
+                    step="0.1"
+                    min="0"
+                    max="99.9"
+                    {...register('bedrooms', {
+                      setValueAs: (value) => {
+                        if (value === '') return '';
+                        const num = parseFloat(value);
+                        return isNaN(num) ? '' : Math.round(num * 10) / 10;
+                      }
+                    })}
                   />
                   {errors.bedrooms && <div className="invalid-feedback">{errors.bedrooms.message}</div>}
+                  <small className="form-text text-muted">Enter decimal values like 2.5 (max 1 decimal place)</small>
                 </div>
               </Col>
               <Col lg={4}>
@@ -158,9 +168,19 @@ const PropertyAdd = ({
                     id="property-bathroom" 
                     className={`form-control ${errors.bathrooms ? 'is-invalid' : ''}`}
                     placeholder="0"
-                    {...register('bathrooms')}
+                    step="0.1"
+                    min="0"
+                    max="99.9"
+                    {...register('bathrooms', {
+                      setValueAs: (value) => {
+                        if (value === '') return '';
+                        const num = parseFloat(value);
+                        return isNaN(num) ? '' : Math.round(num * 10) / 10;
+                      }
+                    })}
                   />
                   {errors.bathrooms && <div className="invalid-feedback">{errors.bathrooms.message}</div>}
+                  <small className="form-text text-muted">Enter decimal values like 2.5 (max 1 decimal place)</small>
                 </div>
               </Col>
               <Col lg={4}>
@@ -197,6 +217,62 @@ const PropertyAdd = ({
                     {...register('floor')}
                   />
                   {errors.floor && <div className="invalid-feedback">{errors.floor.message}</div>}
+                </div>
+              </Col>
+              <Col lg={4}>
+                <label htmlFor="property-garages" className="form-label">
+                  Garages (Optional)
+                </label>
+                <div className="input-group mb-3">
+                  <span className="input-group-text fs-20">
+                    <IconifyIcon icon="solar:car-broken" className="align-middle" />
+                  </span>
+                  <input 
+                    type="number" 
+                    id="property-garages" 
+                    className={`form-control ${errors.garages ? 'is-invalid' : ''}`}
+                    placeholder="0"
+                    step="0.1"
+                    min="0"
+                    max="99.9"
+                    {...register('garages', {
+                      setValueAs: (value) => {
+                        if (value === '') return '';
+                        const num = parseFloat(value);
+                        return isNaN(num) ? '' : Math.round(num * 10) / 10;
+                      }
+                    })}
+                  />
+                  {errors.garages && <div className="invalid-feedback">{errors.garages.message}</div>}
+                  <small className="form-text text-muted">Enter decimal values like 1.5 (max 1 decimal place)</small>
+                </div>
+              </Col>
+              <Col lg={4}>
+                <label htmlFor="property-theater" className="form-label">
+                  Theater (Optional)
+                </label>
+                <div className="input-group mb-3">
+                  <span className="input-group-text fs-20">
+                    <IconifyIcon icon="solar:tv-broken" className="align-middle" />
+                  </span>
+                  <input 
+                    type="number" 
+                    id="property-theater" 
+                    className={`form-control ${errors.theater ? 'is-invalid' : ''}`}
+                    placeholder="0"
+                    step="0.1"
+                    min="0"
+                    max="99.9"
+                    {...register('theater', {
+                      setValueAs: (value) => {
+                        if (value === '') return '';
+                        const num = parseFloat(value);
+                        return isNaN(num) ? '' : Math.round(num * 10) / 10;
+                      }
+                    })}
+                  />
+                  {errors.theater && <div className="invalid-feedback">{errors.theater.message}</div>}
+                  <small className="form-text text-muted">Enter decimal values like 1.0 (max 1 decimal place)</small>
                 </div>
               </Col>
               <Col lg={12}>

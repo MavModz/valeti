@@ -35,10 +35,12 @@ export const getAllProperty = async () => {
         console.log('🏗️ Features:', property.features);
         
         // Ensure we have valid numeric values
-        const beds = parseInt(property.features?.bedrooms) || 0;
-        const bath = parseInt(property.features?.bathrooms) || 0;
+        const bath = parseFloat(property.features?.bathrooms) || 0;
+        const beds = parseFloat(property.features?.bedrooms) || 0;
         const size = parseInt(property.features?.area) || 0;
         const flor = parseInt(property.features?.floors) || 0;
+        const garages = parseFloat(property.features?.garages) || 0;
+        const theater = parseFloat(property.features?.theater) || 0;
         const price = parseFloat(property.price) || 0;
         
         const transformedProperty = {
@@ -51,6 +53,8 @@ export const getAllProperty = async () => {
           bath: bath,
           size: size,
           flor: flor,
+          garages: garages,
+          theater: theater,
           price: price,
           propertyType: property.category || 'Residences',
           country: property.location?.city || 'Unknown',

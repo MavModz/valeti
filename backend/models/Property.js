@@ -84,6 +84,14 @@ const propertySchema = new mongoose.Schema({
       type: Number,
       min: [1, 'Floors must be at least 1']
     },
+    garages: {
+      type: Number,
+      min: [0, 'Garages cannot be negative']
+    },
+    theater: {
+      type: Number,
+      min: [0, 'Theater cannot be negative']
+    },
     yearBuilt: Number,
     furnished: {
       type: Boolean,

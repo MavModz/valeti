@@ -102,7 +102,8 @@ const HomeDesignsPage = () => {
       price: property.price ? `$${property.price.toLocaleString()}` : 'Price on request',
       bedrooms: property.features?.bedrooms || 0,
       bathrooms: property.features?.bathrooms || 0,
-      garages: property.features?.parking || 0,
+      garages: property.features?.garages || 0,
+      theater: property.features?.theater || 0,
       area: property.features?.area ? `${property.features.area} sq ft` : 'Area not specified',
       depth: property.features?.floors ? `${property.features.floors} floor${property.features.floors > 1 ? 's' : ''}` : 'Floor info not available',
       image: property.images && property.images.length > 0 ? property.images[0].url : randomImage,
@@ -116,7 +117,11 @@ const HomeDesignsPage = () => {
   };
 
   // Get unique locations for filters
-  const locations = ['All', ...new Set(properties.map(item => item.location?.city || item.location).filter(Boolean))];
+  const locations = ['All', ...new Set(properties.map(item => {
+    if (item.location?.city) return item.location.city;
+    if (item.location?.country) return item.location.country;
+    return 'Unknown';
+  }).filter(Boolean))];
 
   // Filter and sort data
   const filteredData = useMemo(() => {
@@ -276,16 +281,20 @@ const HomeDesignsPage = () => {
         <div className="mb-3">
           <div className="d-flex justify-content-between mb-2">
             <small className="text-muted">
-              <IconifyIcon icon="ri:bed-line" className="me-1" />
+              <IconifyIcon icon="bx:bed" className="me-1" />
               {item.bedrooms} beds
             </small>
             <small className="text-muted">
-              <IconifyIcon icon="ri:shower-line" className="me-1" />
+              <IconifyIcon icon="bx:shower" className="me-1" />
               {item.bathrooms} baths
             </small>
             <small className="text-muted">
               <IconifyIcon icon="ri:car-line" className="me-1" />
               {item.garages} garage{item.garages !== 1 ? 's' : ''}
+            </small>
+            <small className="text-muted">
+              <IconifyIcon icon="ri:tv-line" className="me-1" />
+              {item.theater} theater{item.theater !== 1 ? 's' : ''}
             </small>
           </div>
           <div className="d-flex justify-content-between align-items-center">
@@ -371,16 +380,20 @@ const HomeDesignsPage = () => {
             <div className="d-flex justify-content-between align-items-center mb-3">
               <div className="d-flex gap-3">
                 <small className="text-muted">
-                  <IconifyIcon icon="ri:bed-line" className="me-1" />
+                  <IconifyIcon icon="bx:bed" className="me-1" />
                   {item.bedrooms} beds
                 </small>
                 <small className="text-muted">
-                  <IconifyIcon icon="ri:shower-line" className="me-1" />
+                  <IconifyIcon icon="bx:shower" className="me-1" />
                   {item.bathrooms} baths
                 </small>
                 <small className="text-muted">
                   <IconifyIcon icon="ri:car-line" className="me-1" />
                   {item.garages} garage{item.garages !== 1 ? 's' : ''}
+                </small>
+                <small className="text-muted">
+                  <IconifyIcon icon="ri:tv-line" className="me-1" />
+                  {item.theater} theater{item.theater !== 1 ? 's' : ''}
                 </small>
                 <small className="text-muted">
                   <IconifyIcon icon="ri:building-line" className="me-1" />

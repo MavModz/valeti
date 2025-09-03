@@ -31,6 +31,12 @@ const usePropertyAdd = () => {
     bathrooms: yup.number().min(0, 'Bathrooms must be 0 or greater').required('Number of bathrooms is required'),
     squareFootage: yup.number().positive('Square footage must be positive').required('Square footage is required'),
     floor: yup.number().min(0, 'Floor must be 0 or greater').required('Floor number is required'),
+    garages: yup.number().transform((value, originalValue) => {
+      return originalValue === '' ? undefined : value;
+    }).min(0, 'Garages must be 0 or greater').optional(),
+    theater: yup.number().transform((value, originalValue) => {
+      return originalValue === '' ? undefined : value;
+    }).min(0, 'Theater must be 0 or greater').optional(),
     address: yup.string().transform((value, originalValue) => {
       return originalValue === '' ? undefined : value;
     }).min(10, 'Address must be at least 10 characters if provided').optional(),
@@ -57,6 +63,8 @@ const usePropertyAdd = () => {
       bathrooms: '',
       squareFootage: '',
       floor: '',
+      garages: '',
+      theater: '',
       address: '',
       zipCode: ''
     }
@@ -97,7 +105,9 @@ const usePropertyAdd = () => {
           bedrooms: parseInt(data.bedrooms),
           bathrooms: parseInt(data.bathrooms),
           area: parseFloat(data.squareFootage),
-          floors: parseInt(data.floor)
+          floors: parseInt(data.floor),
+          garages: data.garages && data.garages !== '' ? parseFloat(data.garages) : undefined,
+          theater: data.theater && data.theater !== '' ? parseFloat(data.theater) : undefined
         },
         status: 'available',
         // Include uploaded images

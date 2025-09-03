@@ -88,6 +88,8 @@ const sampleProperties = [
       areaUnit: 'sqft',
       parking: 1,
       floors: 1,
+      garages: 1,
+      theater: 0,
       yearBuilt: 2020,
       furnished: false
     },
@@ -137,6 +139,8 @@ const sampleProperties = [
       areaUnit: 'sqft',
       parking: 3,
       floors: 2,
+      garages: 2,
+      theater: 1,
       yearBuilt: 2018,
       furnished: true
     },
@@ -186,6 +190,8 @@ const sampleProperties = [
       areaUnit: 'sqft',
       parking: 2,
       floors: 2,
+      garages: 1,
+      theater: 0,
       yearBuilt: 2015,
       furnished: false
     },

@@ -61,6 +61,14 @@ const validateProperty = [
     .trim()
     .notEmpty()
     .withMessage('State is required'),
+  body('features.garages')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Garages must be a positive number'),
+  body('features.theater')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Theater must be a positive number'),
   body('agent')
     .optional()
     .isMongoId()

@@ -14,6 +14,8 @@ const PropertyAddCard = ({ formData, propertyCategory, propertyFor, city, countr
     bathrooms: formData?.bathrooms || '',
     squareFootage: formData?.squareFootage || '',
     floor: formData?.floor || '',
+    garages: formData?.garages || '',
+    theater: formData?.theater || '',
     address: formData?.address || '',
     zipCode: formData?.zipCode || ''
   };
@@ -149,7 +151,7 @@ const PropertyAddCard = ({ formData, propertyCategory, propertyFor, city, countr
               </span>
             </Col>
             <Col lg={3} xs={3}>
-              <span className={`badge ${previewData.squareFootage ? 'bg-light-subtle text-dark' : 'bg-light-subtle text-muted'} border fs-12`}>
+              <span className={`badge ${previewData.squareFootage ? 'bg-light-subtle text-dark' : 'bg-light-subtle text-dark'} border fs-12`}>
                 <span className="fs-16">
                   <IconifyIcon icon="solar:scale-broken" className="align-middle" />
                 </span>
@@ -166,6 +168,26 @@ const PropertyAddCard = ({ formData, propertyCategory, propertyFor, city, countr
             </Col>
           </Row>
           
+          {/* Additional Features Row */}
+          <Row className="mt-2 g-2">
+            <Col lg={3} xs={3}>
+              <span className={`badge ${previewData.garages ? 'bg-light-subtle text-dark' : 'bg-light-subtle text-muted'} border fs-12`}>
+                <span className="fs-16">
+                  <IconifyIcon icon="solar:car-broken" className="align-middle" />
+                </span>
+                &nbsp;{previewData.garages || '0'} Garage
+              </span>
+            </Col>
+            <Col lg={3} xs={3}>
+              <span className={`badge ${previewData.theater ? 'bg-light-subtle text-dark' : 'bg-light-subtle text-muted'} border fs-12`}>
+                <span className="fs-16">
+                  <IconifyIcon icon="solar:tv-broken" className="align-middle" />
+                </span>
+                &nbsp;{previewData.theater || '0'} Theater
+              </span>
+            </Col>
+          </Row>
+          
           {/* Progress indicator */}
           <div className="mt-4 pt-3 border-top">
             <div className="d-flex justify-content-between align-items-center mb-2">
@@ -178,11 +200,13 @@ const PropertyAddCard = ({ formData, propertyCategory, propertyFor, city, countr
                   previewData.bathrooms,
                   previewData.squareFootage,
                   previewData.floor,
+                  previewData.garages,
+                  previewData.theater,
                   previewData.address,
                   propertyCategory,
                   propertyFor,
                   city && country
-                ].filter(Boolean).length}/10
+                ].filter(Boolean).length}/12
               </small>
             </div>
             <div className="progress" style={{ height: '6px' }}>
@@ -196,11 +220,13 @@ const PropertyAddCard = ({ formData, propertyCategory, propertyFor, city, countr
                     previewData.bathrooms,
                     previewData.squareFootage,
                     previewData.floor,
+                    previewData.garages,
+                    previewData.theater,
                     previewData.address,
                     propertyCategory,
                     propertyFor,
                     city && country
-                  ].filter(Boolean).length / 10) * 100}%` 
+                  ].filter(Boolean).length / 12) * 100}%` 
                 }}
               ></div>
             </div>
