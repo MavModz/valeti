@@ -118,12 +118,17 @@ const PropertyAdd = ({
                   <option value="">Select Type</option>
                   <option value="8 meter">8 meter</option>
                   <option value="10 meter">10 meter</option>
+                  <option value="10.5 meter">10.5 meter</option>
                   <option value="12 meter">12 meter</option>
+                  <option value="12.5 meter">12.5 meter</option>
                   <option value="13 meter">13 meter</option>
                   <option value="14 meter">14 meter</option>
+                  <option value="14.5 meter">14.5 meter</option>
                   <option value="16 meter">16 meter</option>
+                  <option value="17 meter">17 meter</option>
                   <option value="18 meter">18 meter</option>
                   <option value="20 meter">20 meter</option>
+                  <option value="Uneven">Uneven</option>
                 </select>
                 {hasSubmitted && !propertyFor && <div className="invalid-feedback">Please select property type</div>}
               </Col>
