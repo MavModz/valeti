@@ -14,8 +14,8 @@ const propertySchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['sale', 'rent', 'both'],
-    default: 'sale'
+    enum: ['new', 'featured'],
+    default: 'new'
   },
   category: {
     type: String,
@@ -75,10 +75,6 @@ const propertySchema = new mongoose.Schema({
       type: String,
       enum: ['sqft', 'sqm', 'acres'],
       default: 'sqft'
-    },
-    parking: {
-      type: Number,
-      min: [0, 'Parking spaces cannot be negative']
     },
     floors: {
       type: Number,

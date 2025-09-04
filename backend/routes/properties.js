@@ -18,7 +18,7 @@ const validateProperty = [
     .isLength({ min: 10 })
     .withMessage('Description must be at least 10 characters long'),
   body('type')
-    .isIn(['sale', 'rent', 'both'])
+    .isIn(['new', 'featured'])
     .withMessage('Invalid property type'),
   body('category')
     .isIn(['Single Story', 'Double Story'])

@@ -32,15 +32,15 @@ const PropertyAddCard = ({ formData, propertyCategory, propertyFor, city, countr
   
   // Get property type badge
   const getPropertyTypeBadge = () => {
-    if (!propertyFor) return { text: 'For Sale', color: 'bg-primary' };
+    if (!propertyFor) return { text: 'New', color: 'bg-primary' };
     
     switch (propertyFor.toLowerCase()) {
-      case 'rent':
-        return { text: 'For Rent', color: 'bg-success' };
-      case 'sale':
-        return { text: 'For Sale', color: 'bg-primary' };
+      case 'new':
+        return { text: 'New', color: 'bg-success' };
+      case 'featured':
+        return { text: 'Featured', color: 'bg-primary' };
       default:
-        return { text: 'For Sale', color: 'bg-warning' };
+        return { text: 'New', color: 'bg-warning' };
     }
   };
 

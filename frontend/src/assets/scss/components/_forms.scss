@@ -52,6 +52,17 @@ input.form-control[type="range"] {
     }
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 // Color Checkbox and Radio
 @each $color,
 $value in $theme-colors {

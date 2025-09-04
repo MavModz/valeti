@@ -90,7 +90,7 @@ const usePropertyAdd = () => {
       const propertyData = {
         title: data.name,
         description: data.description,
-        type: 'sale', // Default to sale since we're using meter values now
+        type: 'new', // Default to sale since we're using meter values now
         category: propertyCategory, // Use exact values: 'Single Story', 'Double Story'
         propertyFor: propertyFor, // Use exact meter values: '8 meter', '10 meter', etc.
         price: data.price && data.price !== '' ? parseFloat(data.price) : undefined,
@@ -102,8 +102,8 @@ const usePropertyAdd = () => {
           country: country && country.trim() !== '' ? country : undefined
         },
         features: {
-          bedrooms: parseInt(data.bedrooms),
-          bathrooms: parseInt(data.bathrooms),
+          bedrooms: parseFloat(data.bedrooms),
+          bathrooms: parseFloat(data.bathrooms),
           area: parseFloat(data.squareFootage),
           floors: parseInt(data.floor),
           garages: data.garages && data.garages !== '' ? parseFloat(data.garages) : undefined,

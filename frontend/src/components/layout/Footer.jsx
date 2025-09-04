@@ -8,7 +8,7 @@ const Footer = () => {
       <Container fluid>
         <Row>
           <Col xs={12} className="text-center">
-            {currentYear} © Lahomes. Crafted by <IconifyIcon icon="solar:hearts-bold-duotone" className="fs-18 align-middle text-danger" />{' '}
+            {currentYear} © Valeti. Crafted by <IconifyIcon icon="solar:hearts-bold-duotone" className="fs-18 align-middle text-danger" />{' '}
             <Link href="" className="fw-bold footer-text" target="_blank">
               Gaurav Chauhan
             </Link>

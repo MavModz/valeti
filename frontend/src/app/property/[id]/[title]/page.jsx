@@ -315,7 +315,7 @@ const PublicPropertyDetailsPage = () => {
                   )}
                   <span className="position-absolute top-0 start-0 p-2">
                     <span className="badge bg-warning text-light px-2 py-1 fs-13">
-                      {transformedProperty.type === 'sale' ? 'For Sale' : 'For Rent'}
+                      {transformedProperty.type === 'new' ? 'New' : 'Featured'}
                     </span>
                   </span>
                 </div>
@@ -421,7 +421,7 @@ const PublicPropertyDetailsPage = () => {
                     <Col xl={2} lg={3} md={6} xs={6}>
                       <p className="text-muted mb-0 fs-15 fw-medium d-flex align-items-center justify-content-center gap-1">
                         <IconifyIcon icon="solar:check-circle-broken" className="fs-18 text-primary" /> 
-                        {transformedProperty.type === 'sale' ? 'For Sale' : 'For Rent'}
+                        {transformedProperty.type === 'new' ? 'New' : 'Featured'}
                       </p>
                     </Col>
                   </Row>
