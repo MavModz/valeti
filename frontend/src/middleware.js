@@ -6,6 +6,12 @@ export default withAuth(
     const token = req.nextauth.token;
     const userRole = token?.role || 'admin';
 
+    // Allow public access to property details pages (public property viewing)
+    if (pathname.startsWith('/property/') && pathname.split('/').length >= 3) {
+      // This is a public property details page (e.g., /property/[id]/[title])
+      return;
+    }
+
     // Handle dashboard access based on user role
     if (pathname.startsWith('/dashboards/')) {
       const dashboardType = pathname.split('/')[2];
@@ -41,7 +47,17 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token }) => !!token, // Only allow authenticated users
+      authorized: ({ token, req }) => {
+        const { pathname } = req.nextUrl;
+        
+        // Allow public access to property details pages
+        if (pathname.startsWith('/property/') && pathname.split('/').length >= 3) {
+          return true; // Always allow access to public property pages
+        }
+        
+        // For all other routes, require authentication
+        return !!token;
+      },
     },
     pages: {
       signIn: '/auth/sign-in',
@@ -53,7 +69,7 @@ export default withAuth(
 export const config = {
   matcher: [
     '/dashboards/:path*',
-    '/property/:path*',
+    '/property/:path*', // This will be handled by the middleware logic to allow public access to details pages
     '/agents/:path*',
     '/customers/:path*',
     '/orders/:path*',
