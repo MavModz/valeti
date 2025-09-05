@@ -56,11 +56,17 @@ const SearchPage = () => {
   useEffect(() => {
     fetchProperties();
     
-    // Read page from URL on initial load
+    // Read URL parameters on initial load
     const url = new URL(window.location);
     const pageFromUrl = parseInt(url.searchParams.get('page'));
+    const lotSizeFromUrl = url.searchParams.get('lotSize');
+    
     if (pageFromUrl && pageFromUrl > 0) {
       setCurrentPage(pageFromUrl);
+    }
+    
+    if (lotSizeFromUrl) {
+      setSelectedLotSize(lotSizeFromUrl);
     }
   }, []);
   

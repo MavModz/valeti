@@ -204,8 +204,8 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.orange-btn {
-  background: #fd7e14;
+.blue-btn {
+  background: #0d6efd;
   color: white;
   border: none;
   border-radius: 50%;
@@ -218,11 +218,11 @@
   z-index: 10;
 }
 
-.orange-btn:hover {
-  background: #e8690b;
+.blue-btn:hover {
+  background: #0b5ed7;
   color: white;
   transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(253, 126, 20, 0.4);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
 }
 
 .explore-all-btn {
