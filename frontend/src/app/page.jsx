@@ -679,48 +679,122 @@ export default function HomePage() {
       {/* Features Section */}
       <section id="features" className={`py-5 bg-white section-transition ${visibleSections.has('features') ? styles['visible'] : ''}`}>
         <div className="container">
-          <div className="row g-4">
-            <div className="col-lg-4 col-md-6">
-              <div className="card h-100 border-0 shadow">
-                <div className="card-body text-center p-4">
-                  <div className="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
-                       style={{ width: '60px', height: '60px' }}>
-                    <svg className="text-primary" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
+          <div className="row align-items-center">
+            {/* Left Section */}
+            <div className="col-lg-6 mb-5 mb-lg-0">
+              <div className="position-relative">
+                {/* Main Headline */}
+                <h2 className="display-4 fw-bold mb-4" style={{ fontFamily: 'serif', color: '#212529' }}>
+                  Explore & Build your<br />
+                  <em className="text-primary">Dream home</em> <span className="text-primary">*</span>
+                </h2>
+
+                {/* Main Image */}
+                <div className="position-relative mb-4">
+                  <div className="rounded-4 overflow-hidden shadow-lg" style={{ height: '400px' }}>
+                    <Image
+                      src={p1}
+                      alt="Happy couple with keys"
+                      width={600}
+                      height={400}
+                      className="w-100 h-100"
+                      style={{ objectFit: 'cover' }}
+                    />
                   </div>
-                  <h5 className="fw-semibold text-dark mb-2">Analytics Dashboard</h5>
-                  <p className="text-muted mb-0">Comprehensive insights and metrics for your real estate business</p>
+                  
+                  {/* Client Overlay Card */}
+                  <div className="position-absolute bottom-0 start-0 bg-white rounded-3 shadow-lg p-3 m-3" style={{ zIndex: 10 }}>
+                    <div className="d-flex align-items-center mb-2">
+                      <span className="fw-bold" style={{ color: '#212529' }}>120k+ Happy Client</span>
+                    </div>
+                    <div className="d-flex">
+                      <div className="rounded-circle border border-2 border-white me-2" style={{ width: '32px', height: '32px', overflow: 'hidden' }}>
+                        <Image src={p2} alt="Client" width={32} height={32} style={{ objectFit: 'cover' }} />
+                      </div>
+                      <div className="rounded-circle border border-2 border-white me-2" style={{ width: '32px', height: '32px', overflow: 'hidden' }}>
+                        <Image src={p3} alt="Client" width={32} height={32} style={{ objectFit: 'cover' }} />
+                      </div>
+                      <div className="rounded-circle border border-2 border-white me-2" style={{ width: '32px', height: '32px', overflow: 'hidden' }}>
+                        <Image src={p4} alt="Client" width={32} height={32} style={{ objectFit: 'cover' }} />
+                      </div>
+                      <div className="rounded-circle border border-2 border-white me-2" style={{ width: '32px', height: '32px', overflow: 'hidden' }}>
+                        <Image src={p13} alt="Client" width={32} height={32} style={{ objectFit: 'cover' }} />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="col-lg-4 col-md-6">
-              <div className="card h-100 border-0 shadow">
-                <div className="card-body text-center p-4">
-                  <div className="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
-                       style={{ width: '60px', height: '60px' }}>
-                    <svg className="text-primary" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                  </div>
-                  <h5 className="fw-semibold text-dark mb-2">User Management</h5>
-                  <p className="text-muted mb-0">Efficiently manage agents, customers, and team members</p>
+            {/* Right Section */}
+            <div className="col-lg-6">
+              <div className="position-relative">
+                {/* Abstract Decorative Lines */}
+                <div className="position-absolute top-0 end-0" style={{ zIndex: 1 }}>
+                  <svg width="80" height="60" viewBox="0 0 80 60" fill="none">
+                    <path d="M10 10 Q30 20, 50 10 Q70 0, 80 20" stroke="#0d6efd" strokeWidth="2" fill="none" opacity="0.6" />
+                    <path d="M5 30 Q25 40, 45 30 Q65 20, 75 40" stroke="#0d6efd" strokeWidth="2" fill="none" opacity="0.4" />
+                  </svg>
                 </div>
-              </div>
-            </div>
 
-            <div className="col-lg-4 col-md-6">
-              <div className="card h-100 border-0 shadow">
-                <div className="card-body text-center p-4">
-                  <div className="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
-                       style={{ width: '60px', height: '60px' }}>
-                    <svg className="text-primary" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
+                {/* Quote */}
+                <blockquote className="fst-italic mb-4" style={{ fontSize: '1.1rem', lineHeight: '1.6', color: '#212529' }}>
+                  "Your premier partner in transforming & bringing dreams into life. Let us guide you home with expertise."
+                </blockquote>
+
+                {/* Statistics */}
+                <div className="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                  <div className="text-center">
+                    <div className="display-6 fw-bold" style={{ color: '#212529' }}>$100+</div>
+                    <div style={{ color: '#212529' }}>Project Handover</div>
                   </div>
-                  <h5 className="fw-semibold text-dark mb-2">Property Management</h5>
-                  <p className="text-muted mb-0">Complete property listing and management system</p>
+                  <div className="text-center">
+                    <div className="display-6 fw-bold" style={{ color: '#212529' }}>1.9k+</div>
+                    <div style={{ color: '#212529' }}>Happy Customers</div>
+                  </div>
+                </div>
+
+                {/* Benefits List */}
+                <div className="mb-4 pb-3 border-bottom">
+                  <div className="d-flex align-items-center mb-2">
+                    <span className="text-success me-2" style={{ fontSize: '1.2rem' }}>✓</span>
+                    <span style={{ color: '#212529' }}>Expertise grounded in local knowledge.</span>
+                  </div>
+                  <div className="d-flex align-items-center mb-2">
+                    <span className="text-success me-2" style={{ fontSize: '1.2rem' }}>✓</span>
+                    <span style={{ color: '#212529' }}>Unique, thoughtful home designs</span>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <span className="text-success me-2" style={{ fontSize: '1.2rem' }}>✓</span>
+                    <span style={{ color: '#212529' }}>From concept to completion, we're with you.</span>
+                  </div>
+                </div>
+
+                {/* Call to Action Button */}
+                <Link href="/search" className="btn btn-dark btn-lg rounded-3 px-4 py-3 d-inline-flex align-items-center">
+                  <span className="me-2">Read More</span>
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
+                  </svg>
+                </Link>
+
+                {/* Second Image - Interior */}
+                <div className="position-absolute" style={{ 
+                  bottom: '-55px', 
+                  right: '650px', 
+                  zIndex: 2,
+                  // transform: 'rotate(-5deg)'
+                }}>
+                  <div className="rounded-4 overflow-hidden shadow-lg" style={{ width: '300px', height: '200px' }}>
+                    <Image
+                      src={p2}
+                      alt="Beautiful interior"
+                      width={300}
+                      height={200}
+                      className="w-100 h-100"
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
