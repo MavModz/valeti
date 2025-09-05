@@ -45,6 +45,13 @@ const SearchPage = () => {
   const [error, setError] = useState(null);
   const itemsPerPage = 10;
 
+  // New filter states
+  const [selectedBeds, setSelectedBeds] = useState('All');
+  const [selectedBaths, setSelectedBaths] = useState('All');
+  const [selectedGarages, setSelectedGarages] = useState('All');
+  const [selectedTheater, setSelectedTheater] = useState('All');
+  const [selectedLotSize, setSelectedLotSize] = useState('All');
+
   // Fetch properties from backend
   useEffect(() => {
     fetchProperties();
@@ -60,7 +67,7 @@ const SearchPage = () => {
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, selectedCategory, selectedLocation]);
+  }, [searchTerm, selectedCategory, selectedLocation, selectedBeds, selectedBaths, selectedGarages, selectedTheater, selectedLotSize]);
   
   // Update URL when page changes
   useEffect(() => {
@@ -106,6 +113,10 @@ const SearchPage = () => {
     const fallbackImages = [cardImg, cardImg2, cardImg3, cardImg4, cardImg5];
     const randomImage = fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
     
+    // Generate lot size based on category or random
+    const lotSizes = ['8 meter', '10 meter', '12 meter', '13 meter', '14 meter', '16 meter', '17.5 meter', '18 meter', 'uneven'];
+    const lotSize = property.features?.lotSize || lotSizes[Math.floor(Math.random() * lotSizes.length)];
+    
     return {
       id: property._id,
       title: property.title,
@@ -118,6 +129,7 @@ const SearchPage = () => {
       theater: property.features?.theater || 0,
       area: property.features?.area ? `${property.features.area} sq ft` : 'Area not specified',
       depth: property.features?.floors ? `${property.features.floors} floor${property.features.floors > 1 ? 's' : ''}` : 'Floor info not available',
+      lotSize: lotSize,
       image: property.images && property.images.length > 0 ? property.images[0].url : randomImage,
       description: property.description || 'No description available',
       features: property.amenities || ['Basic amenities'],
@@ -145,6 +157,11 @@ const SearchPage = () => {
       searchTerm,
       selectedCategory,
       selectedLocation,
+      selectedBeds,
+      selectedBaths,
+      selectedGarages,
+      selectedTheater,
+      selectedLotSize,
       totalProperties: properties.length
     });
     
@@ -157,8 +174,13 @@ const SearchPage = () => {
         
         const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
         const matchesLocation = selectedLocation === 'All' || item.location === selectedLocation;
+        const matchesBeds = selectedBeds === 'All' || item.bedrooms.toString() === selectedBeds;
+        const matchesBaths = selectedBaths === 'All' || item.bathrooms.toString() === selectedBaths;
+        const matchesGarages = selectedGarages === 'All' || item.garages.toString() === selectedGarages;
+        const matchesTheater = selectedTheater === 'All' || item.theater.toString() === selectedTheater;
+        const matchesLotSize = selectedLotSize === 'All' || item.lotSize.toLowerCase() === selectedLotSize.toLowerCase();
         
-        return matchesSearch && matchesCategory && matchesLocation;
+        return matchesSearch && matchesCategory && matchesLocation && matchesBeds && matchesBaths && matchesGarages && matchesTheater && matchesLotSize;
       });
     
     console.log('✅ Filtered data result:', filtered.length, 'properties');
@@ -198,7 +220,7 @@ const SearchPage = () => {
     }
 
     return filtered;
-  }, [properties, searchTerm, selectedCategory, selectedLocation, sortBy]);
+  }, [properties, searchTerm, selectedCategory, selectedLocation, selectedBeds, selectedBaths, selectedGarages, selectedTheater, selectedLotSize, sortBy]);
 
   // Pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -290,6 +312,10 @@ const SearchPage = () => {
             <small className="text-muted">
               <IconifyIcon icon="ri:building-line" className="me-1" />
               {item.depth}
+            </small>
+            <small className="text-muted">
+              <IconifyIcon icon="ri:ruler-line" className="me-1" />
+              {item.lotSize}
             </small>
             <div className="d-flex align-items-center">
               <IconifyIcon icon="ri:star-fill" className="text-warning me-1" />
@@ -387,6 +413,10 @@ const SearchPage = () => {
                 <small className="text-muted">
                   <IconifyIcon icon="ri:building-line" className="me-1" />
                   {item.depth}
+                </small>
+                <small className="text-muted">
+                  <IconifyIcon icon="ri:ruler-line" className="me-1" />
+                  {item.lotSize}
                 </small>
               </div>
               <div className="d-flex align-items-center">
@@ -521,6 +551,101 @@ const SearchPage = () => {
                 <Button variant="primary" className="w-100">
                   <IconifyIcon icon="ri:search-line" className="me-1" />
                   Search
+                </Button>
+              </Col>
+            </Row>
+          </CardBody>
+        </Card>
+
+        {/* Advanced Filters */}
+        <Card className="mb-4">
+          <CardBody>
+            <Row className="g-3">
+              <Col md={2}>
+                <Form.Label className="fw-medium">Beds</Form.Label>
+                <Form.Select
+                  value={selectedBeds}
+                  onChange={(e) => setSelectedBeds(e.target.value)}
+                >
+                  <option value="All">All</option>
+                  <option value="1">1+</option>
+                  <option value="2">2+</option>
+                  <option value="3">3+</option>
+                  <option value="4">4+</option>
+                  <option value="5">5+</option>
+                </Form.Select>
+              </Col>
+              <Col md={2}>
+                <Form.Label className="fw-medium">Baths</Form.Label>
+                <Form.Select
+                  value={selectedBaths}
+                  onChange={(e) => setSelectedBaths(e.target.value)}
+                >
+                  <option value="All">All</option>
+                  <option value="1">1+</option>
+                  <option value="2">2+</option>
+                  <option value="3">3+</option>
+                  <option value="4">4+</option>
+                  <option value="5">5+</option>
+                </Form.Select>
+              </Col>
+              <Col md={2}>
+                <Form.Label className="fw-medium">Garages</Form.Label>
+                <Form.Select
+                  value={selectedGarages}
+                  onChange={(e) => setSelectedGarages(e.target.value)}
+                >
+                  <option value="All">All</option>
+                  <option value="0">0</option>
+                  <option value="1">1+</option>
+                  <option value="2">2+</option>
+                  <option value="3">3+</option>
+                </Form.Select>
+              </Col>
+              <Col md={2}>
+                <Form.Label className="fw-medium">Theater</Form.Label>
+                <Form.Select
+                  value={selectedTheater}
+                  onChange={(e) => setSelectedTheater(e.target.value)}
+                >
+                  <option value="All">All</option>
+                  <option value="0">0</option>
+                  <option value="1">1+</option>
+                  <option value="2">2+</option>
+                </Form.Select>
+              </Col>
+              <Col md={2}>
+                <Form.Label className="fw-medium">Lot Size</Form.Label>
+                <Form.Select
+                  value={selectedLotSize}
+                  onChange={(e) => setSelectedLotSize(e.target.value)}
+                >
+                  <option value="All">All</option>
+                  <option value="8 meter">8 meter</option>
+                  <option value="10 meter">10 meter</option>
+                  <option value="12 meter">12 meter</option>
+                  <option value="13 meter">13 meter</option>
+                  <option value="14 meter">14 meter</option>
+                  <option value="16 meter">16 meter</option>
+                  <option value="17.5 meter">17.5 meter</option>
+                  <option value="18 meter">18 meter</option>
+                  <option value="uneven">Uneven</option>
+                </Form.Select>
+              </Col>
+              <Col md={2} className="d-flex align-items-end">
+                <Button 
+                  variant="outline-secondary" 
+                  className="w-100"
+                  onClick={() => {
+                    setSelectedBeds('All');
+                    setSelectedBaths('All');
+                    setSelectedGarages('All');
+                    setSelectedTheater('All');
+                    setSelectedLotSize('All');
+                  }}
+                >
+                  <IconifyIcon icon="ri:refresh-line" className="me-1" />
+                  Clear Filters
                 </Button>
               </Col>
             </Row>
@@ -667,6 +792,11 @@ const SearchPage = () => {
                   setSearchTerm('');
                   setSelectedCategory('All');
                   setSelectedLocation('All');
+                  setSelectedBeds('All');
+                  setSelectedBaths('All');
+                  setSelectedGarages('All');
+                  setSelectedTheater('All');
+                  setSelectedLotSize('All');
                 }}
               >
                 Clear Filters

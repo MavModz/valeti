@@ -168,7 +168,7 @@ export default function HomePage() {
             </p>
             <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center">
               <Link 
-                href="/dashboards/analytics" 
+                href="/search" 
                 className="btn btn-primary btn-lg px-5 py-3 fw-semibold shadow"
               >
                 Explore Properties

@@ -381,7 +381,10 @@ const PublicPropertyDetailsPage = () => {
                     <IconifyIcon icon="solar:wallet-money-bold-duotone" width={24} height={24} className="fs-24 text-success" />
                   </div>
                   <p className="fw-medium text-dark fs-18 mb-0">
-                    {transformedProperty.currency} {transformedProperty.price?.toLocaleString() || '0'}
+                    {transformedProperty.price && transformedProperty.price > 0 
+                      ? `${transformedProperty.currency} ${transformedProperty.price.toLocaleString()}`
+                      : 'Price on Request'
+                    }
                   </p>
                 </div>
 
