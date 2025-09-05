@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import logoDark from '@/assets/images/logo-dark.png';
+// import logoDark from '@/assets/images/logo-dark.png';
+import logoDark from '@/assets/images/valeti-logo-white.png';
 import p1 from '@/assets/images/properties/p-1.jpg';
 import p2 from '@/assets/images/properties/p-2.jpg';
 import p3 from '@/assets/images/properties/p-3.jpg';
 import p4 from '@/assets/images/properties/p-4.jpg';
-import p5 from '@/assets/images/properties/p-5.jpg';
+import p13 from '@/assets/images/properties/p-13.jpg';
 import { getFeaturedProperties } from '@/app/lib/Services/api';
 import styles from './page.module.css';
 
@@ -136,7 +137,7 @@ export default function HomePage() {
       <section className={`${styles['hero-section']} position-relative`}>
         <div className={styles['hero-image-container']}>
           <Image 
-            src={p1} 
+            src={p13} 
             alt="Luxury Property" 
             fill 
             className={styles['hero-image']}
@@ -150,8 +151,8 @@ export default function HomePage() {
             <div className="mb-4">
               <Image 
                 alt="Logo" 
-                width={180} 
-                height={45} 
+                width={300} 
+                height={150} 
                 src={logoDark} 
                 className="mx-auto mb-3"
                 style={{ filter: 'brightness(0) invert(1)' }}

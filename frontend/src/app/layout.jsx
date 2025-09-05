@@ -1,4 +1,5 @@
-import logoDark from '@/assets/images/logo-dark.png';
+// import logoDark from '@/assets/images/logo-dark.png';
+import logoDark from '@/assets/images/valeti-logo-white.png';
 import AppProvidersWrapper from '@/components/wrappers/AppProvidersWrapper';
 import { Figtree } from 'next/font/google';
 import Image from 'next/image';

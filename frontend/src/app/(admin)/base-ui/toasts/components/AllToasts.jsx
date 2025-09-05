@@ -5,8 +5,8 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { Button, Col, Form, Row, Toast, ToastBody, ToastContainer, ToastHeader } from 'react-bootstrap';
 import ReactSelect from 'react-select';
-import logoDark from '@/assets/images/logo-dark.png';
-import logoLight from '@/assets/images/logo-light.png';
+import valetiLogoBlack from '@/assets/images/valeti-logo-black.png';
+import valetiLogoWhite from '@/assets/images/valeti-logo-white.png';
 import ComponentContainerCard from '@/components/ComponentContainerCard';
 const BasicToast = () => {
   const {
@@ -20,8 +20,8 @@ const BasicToast = () => {
       <Toast className="fade d-block opacity-100" role="alert" onClose={hide} show={!isOpen}>
         <ToastHeader closeButton>
           <div className="auth-logo d-inline-block me-auto">
-            <Image className="logo-dark" src={logoDark} alt="logo-dark" height={18} />
-            <Image className="logo-light" src={logoLight} alt="logo-light" height={18} />
+            <Image className="logo-dark" src={valetiLogoBlack} alt="Valeti logo dark" height={18} />
+            <Image className="logo-light" src={valetiLogoWhite} alt="Valeti logo light" height={18} />
           </div>
           <div className="float-end">
             <small>11 mins ago</small>

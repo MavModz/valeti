@@ -10,8 +10,11 @@ import {
   Offcanvas
 } from 'react-bootstrap';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
+import valetiLogoWhite from '@/assets/images/valeti-logo-white.png';
+import valetiLogoBlack from '@/assets/images/valeti-logo-black.png';
 
 const PublicHeader = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
@@ -156,7 +159,7 @@ const PublicHeader = () => {
   ];
 
   const renderNavItem = (item) => {
-    const linkClass = `fw-medium ${isScrolled ? 'text-dark' : 'text-white'} ${isActive(item.href) ? 'active' : ''}`;
+    const linkClass = `fw-medium text-white ${isActive(item.href) ? 'active' : ''}`;
 
     if (item.dropdown) {
       return (
@@ -316,7 +319,9 @@ const PublicHeader = () => {
         .navbar {
           transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
           background: linear-gradient(135deg, transparent 0%, transparent 100%);
-          position: relative;
+          position: sticky;
+          top: 0;
+          z-index: 1030;
         }
         .navbar::before {
           content: '';
@@ -325,7 +330,7 @@ const PublicHeader = () => {
           left: 0;
           right: 0;
           bottom: 0;
-          background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+          background: var(--bs-secondary-bg);
           opacity: 0;
           transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
           backdrop-filter: blur(0px);
@@ -343,6 +348,14 @@ const PublicHeader = () => {
             0 4px 20px rgba(0, 0, 0, 0.08),
             0 1px 3px rgba(0, 0, 0, 0.05);
         }
+        
+        /* Ensure sticky behavior works properly */
+        .navbar.fixed-top,
+        .navbar.sticky-top {
+          position: sticky !important;
+          top: 0 !important;
+          z-index: 1030 !important;
+        }
         .nav-link {
           transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
           position: relative;
@@ -351,6 +364,20 @@ const PublicHeader = () => {
         .nav-link:hover {
           color: var(--bs-primary) !important;
           transform: translateY(-1px);
+        }
+        
+        /* Ensure menu items are visible when scrolled */
+        .navbar.scrolled .nav-link {
+          color: white !important;
+        }
+        .navbar.scrolled .nav-link:hover {
+          color: var(--bs-primary) !important;
+        }
+        .navbar.scrolled .dropdown-toggle {
+          color: white !important;
+        }
+        .navbar.scrolled .dropdown-toggle:hover {
+          color: var(--bs-primary) !important;
         }
         .nav-link::after {
           content: '';
@@ -561,19 +588,25 @@ const PublicHeader = () => {
         }
       `}</style>
       <Navbar
-        bg={isScrolled ? "white" : "transparent"}
+        bg={isScrolled ? "secondary" : "transparent"}
         expand="lg"
-        className={`${isScrolled ? 'shadow-sm border-bottom scrolled' : ''}`}
+        className={`${isScrolled ? 'shadow-sm scrolled' : ''}`}
         sticky="top"
       >
         <Container>
           {/* Logo */}
           <Navbar.Brand as={Link} href="/" className="fw-bold d-flex align-items-center">
-            <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"
-              style={{ width: '40px', height: '40px' }}>
-              <IconifyIcon icon="ri:home-line" className="text-white fs-5" />
-            </div>
-            <span className={`fs-4 ${isScrolled ? 'text-primary' : 'text-white'}`}>PropertyFinder</span>
+            <Image 
+              src={valetiLogoWhite} 
+              alt="Valeti Logo" 
+              width={120} 
+              height={40} 
+              className="me-2"
+              style={{ 
+                transition: 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+              }}
+              priority
+            />
           </Navbar.Brand>
 
           {/* Desktop Navigation - Centered */}
@@ -588,7 +621,7 @@ const PublicHeader = () => {
             <Button
               as={Link}
               href="/auth/sign-in"
-              variant={isScrolled ? "outline-primary" : "outline-light"}
+              variant="outline-light"
               size="sm"
             >
               <IconifyIcon icon="ri:login-box-line" className="me-1" />
@@ -607,7 +640,7 @@ const PublicHeader = () => {
 
           {/* Mobile Menu Button */}
           <Button
-            variant={isScrolled ? "outline-secondary" : "outline-light"}
+            variant="outline-light"
             size="sm"
             className="d-lg-none"
             onClick={handleShow}
@@ -622,11 +655,14 @@ const PublicHeader = () => {
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>
             <div className="d-flex align-items-center">
-              <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"
-                style={{ width: '32px', height: '32px' }}>
-                <IconifyIcon icon="ri:home-line" className="text-white" />
-              </div>
-              <span className="text-primary fw-bold">PropertyFinder</span>
+              <Image 
+                src={valetiLogoWhite} 
+                alt="Valeti Logo" 
+                width={100} 
+                height={32} 
+                className="me-2"
+                priority
+              />
             </div>
           </Offcanvas.Title>
         </Offcanvas.Header>

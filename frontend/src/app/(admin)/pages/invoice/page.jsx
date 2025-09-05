@@ -1,5 +1,5 @@
-import logoDark from '@/assets/images/logo-dark.png';
-import logoLight from '@/assets/images/logo-light.png';
+import valetiLogoBlack from '@/assets/images/valeti-logo-black.png';
+import valetiLogoWhite from '@/assets/images/valeti-logo-white.png';
 import PageTitle from '@/components/PageTitle';
 import { currency } from '@/context/constants';
 import Image from 'next/image';
@@ -17,8 +17,8 @@ const InvoicePage = () => {
               <div className="clearfix">
                 <div className="float-sm-end">
                   <div className="auth-logo">
-                    <Image className="logo-dark me-1" src={logoDark} alt="logo-dark" height={24} />
-                    <Image className="logo-light me-1" src={logoLight} alt="logo-dark" height={24} />
+                    <Image className="logo-dark me-1" src={valetiLogoBlack} alt="Valeti logo dark" height={24} />
+                    <Image className="logo-light me-1" src={valetiLogoWhite} alt="Valeti logo light" height={24} />
                   </div>
                   <address className="mt-3">
                     1729 Bangor St,
