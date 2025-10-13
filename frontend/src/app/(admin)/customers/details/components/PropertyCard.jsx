@@ -67,7 +67,7 @@ const PropertyCard = ({
               <span className="fs-16">
                 <IconifyIcon icon="solar:scale-broken" className="align-middle" />
               </span>
-              &nbsp;{size}ft
+              &nbsp;{size}m²
             </span>
           </Col>
           <Col lg={4} xs={4}>

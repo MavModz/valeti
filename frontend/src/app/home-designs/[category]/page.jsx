@@ -117,7 +117,7 @@ const HomeDesignCategoryPage = ({ params }) => {
       bedrooms: property.features?.bedrooms || 0,
       bathrooms: property.features?.bathrooms || 0,
       garages: property.features?.parking || 0,
-      area: property.features?.area ? `${property.features.area} sq ft` : 'Area not specified',
+      area: property.features?.area ? `${property.features.area} m²` : 'Area not specified',
       depth: property.features?.floors ? `${property.features.floors} floor${property.features.floors > 1 ? 's' : ''}` : 'Floor info not available',
       image: property.images && property.images.length > 0 ? property.images[0].url : randomImage,
       description: property.description || 'No description available',

@@ -117,7 +117,7 @@ const PropertyList = () => {
                             </div>
                           </div>
                         </td>
-                        <td>{item.size}ft</td>
+                        <td>{item.size}m²</td>
                         <td>{item.propertyType}</td>
                         <td>
                           {' '}

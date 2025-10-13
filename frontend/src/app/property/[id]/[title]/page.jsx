@@ -405,7 +405,7 @@ const PublicPropertyDetailsPage = () => {
                     <Col xl={2} lg={3} md={6} xs={6} className="border-end">
                       <p className="text-muted mb-0 fs-15 fw-medium d-flex align-items-center justify-content-center gap-1">
                         <IconifyIcon icon="solar:scale-broken" className="fs-18 text-primary" /> 
-                        {transformedProperty.features?.area || 0} {transformedProperty.features?.areaUnit || 'sqft'}
+                        {transformedProperty.features?.area || 0} {transformedProperty.features?.areaUnit || 'sqm'}
                       </p>
                     </Col>
                     <Col xl={2} lg={3} md={6} xs={6} className="border-end">

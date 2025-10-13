@@ -29,7 +29,14 @@ const usePropertyAdd = () => {
     }).positive('Price must be positive').optional(),
     bedrooms: yup.number().min(0, 'Bedrooms must be 0 or greater').required('Number of bedrooms is required'),
     bathrooms: yup.number().min(0, 'Bathrooms must be 0 or greater').required('Number of bathrooms is required'),
-    squareFootage: yup.number().positive('Square footage must be positive').required('Square footage is required'),
+    squareFootage: yup.number()
+      .transform((value, originalValue) => {
+        if (originalValue === '') return undefined;
+        const num = parseFloat(originalValue);
+        return isNaN(num) ? undefined : Math.round(num * 100) / 100;
+      })
+      .positive('Meter square must be positive')
+      .required('Meter square is required'),
     floor: yup.number().min(0, 'Floor must be 0 or greater').required('Floor number is required'),
     garages: yup.number().transform((value, originalValue) => {
       return originalValue === '' ? undefined : value;

@@ -74,7 +74,7 @@ const propertySchema = new mongoose.Schema({
     areaUnit: {
       type: String,
       enum: ['sqft', 'sqm', 'acres'],
-      default: 'sqft'
+      default: 'sqm'
     },
     floors: {
       type: Number,

@@ -155,7 +155,7 @@ const PropertyAddCard = ({ formData, propertyCategory, propertyFor, city, countr
                 <span className="fs-16">
                   <IconifyIcon icon="solar:scale-broken" className="align-middle" />
                 </span>
-                &nbsp;{previewData.squareFootage || '0'}ft
+                &nbsp;{previewData.squareFootage || '0'}m²
               </span>
             </Col>
             <Col lg={3} xs={3}>

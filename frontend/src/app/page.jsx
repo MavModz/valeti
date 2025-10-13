@@ -192,7 +192,7 @@ export default function HomePage() {
       bathrooms: property.features?.bathrooms || 0,
       garages: property.features?.garages || 0,
       theater: property.features?.theater || 0,
-      area: property.features?.area ? `${property.features.area} sq ft` : 'Area not specified',
+      area: property.features?.area ? `${property.features.area} m²` : 'Area not specified',
       depth: property.features?.floors ? `${property.features.floors} floor${property.features.floors > 1 ? 's' : ''}` : 'Floor info not available',
       lotSize: lotSize,
       image: property.images && property.images.length > 0 ? property.images[0].url : randomImage,

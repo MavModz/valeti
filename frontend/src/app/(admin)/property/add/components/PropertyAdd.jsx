@@ -189,8 +189,8 @@ const PropertyAdd = ({
                 </div>
               </Col>
               <Col lg={4}>
-                <label htmlFor="property-square-foot" className="form-label">
-                  Square Foot <span className="text-danger">*</span>
+                <label htmlFor="property-square-meter" className="form-label">
+                  Meter Square (m²) <span className="text-danger">*</span>
                 </label>
                 <div className="input-group mb-3">
                   <span className="input-group-text fs-20">
@@ -198,12 +198,21 @@ const PropertyAdd = ({
                   </span>
                   <input 
                     type="number" 
-                    id="property-square-foot" 
+                    id="property-square-meter" 
                     className={`form-control ${errors.squareFootage ? 'is-invalid' : ''}`}
                     placeholder="0"
-                    {...register('squareFootage')}
+                    step="0.01"
+                    min="0"
+                    {...register('squareFootage', {
+                      setValueAs: (value) => {
+                        if (value === '') return '';
+                        const num = parseFloat(value);
+                        return isNaN(num) ? '' : Math.round(num * 100) / 100;
+                      }
+                    })}
                   />
                   {errors.squareFootage && <div className="invalid-feedback">{errors.squareFootage.message}</div>}
+                  <small className="form-text text-muted">Enter decimal values like 150.50 (max 2 decimal places)</small>
                 </div>
               </Col>
               <Col lg={4}>
