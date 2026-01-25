@@ -23,6 +23,7 @@ const allowedOrigins = [
   'http://127.0.0.1:5500',
   'https://valeti-new-home.vercel.app',
   'https://valeti-kappa.vercel.app',
+  'https://valeti.com.au',
 ];
 
 // Add custom origin from environment variable if provided

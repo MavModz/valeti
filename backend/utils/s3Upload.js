@@ -73,7 +73,7 @@ const uploadFileToS3 = async (fileBuffer, originalName, mimeType, userId, folder
       Key: s3Key,
       Body: fileBuffer,
       ContentType: contentType,
-      ACL: 'public-read', // Make files publicly accessible
+      // ACL: 'public-read', // Make files publicly accessible
       Metadata: {
         originalName: originalName,
         uploadedBy: userId,

@@ -14,7 +14,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'mavmodz-etutor.s3.ap-south-1.amazonaws.com',
+        hostname: 'valeti.s3.ap-south-1.amazonaws.com',
         port: '',
         pathname: '/**',
       },
