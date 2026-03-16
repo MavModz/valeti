@@ -21,6 +21,7 @@ app.use(morgan('combined'));
 const allowedOrigins = [
   'http://localhost:3000',
   'http://127.0.0.1:5500',
+  'http://127.0.0.1:5501',
   'https://valeti-new-home.vercel.app',
   'https://valeti-kappa.vercel.app',
   'https://valeti.com.au',
