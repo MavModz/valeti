@@ -250,6 +250,38 @@ router.post('/', auth, authorize('agent', 'admin'), validateProperty, asyncHandl
 
   const propertyData = req.body;
   console.log('Received property data:', propertyData);
+
+  // Normalize images payload so all images are stored correctly
+  if (propertyData.images) {
+    if (typeof propertyData.images === 'string') {
+      try {
+        const parsed = JSON.parse(propertyData.images);
+        propertyData.images = parsed;
+      } catch (e) {
+        propertyData.images = [propertyData.images];
+      }
+    }
+
+    if (!Array.isArray(propertyData.images)) {
+      propertyData.images = [propertyData.images];
+    }
+  }
+
+  // Normalize floorPlans payload so all floor plans are stored correctly
+  if (propertyData.floorPlans) {
+    if (typeof propertyData.floorPlans === 'string') {
+      try {
+        const parsed = JSON.parse(propertyData.floorPlans);
+        propertyData.floorPlans = parsed;
+      } catch (e) {
+        propertyData.floorPlans = [propertyData.floorPlans];
+      }
+    }
+
+    if (!Array.isArray(propertyData.floorPlans)) {
+      propertyData.floorPlans = [propertyData.floorPlans];
+    }
+  }
   
   // Set agent and owner based on user role
   if (req.user.role === 'agent') {
@@ -325,7 +357,41 @@ router.put('/:id', auth, validateProperty, asyncHandler(async (req, res) => {
     });
   }
 
-  Object.assign(property, req.body);
+  const updateData = { ...req.body };
+
+  // Normalize images payload on update as well
+  if (updateData.images) {
+    if (typeof updateData.images === 'string') {
+      try {
+        const parsed = JSON.parse(updateData.images);
+        updateData.images = parsed;
+      } catch (e) {
+        updateData.images = [updateData.images];
+      }
+    }
+
+    if (!Array.isArray(updateData.images)) {
+      updateData.images = [updateData.images];
+    }
+  }
+
+  // Normalize floorPlans payload on update as well
+  if (updateData.floorPlans) {
+    if (typeof updateData.floorPlans === 'string') {
+      try {
+        const parsed = JSON.parse(updateData.floorPlans);
+        updateData.floorPlans = parsed;
+      } catch (e) {
+        updateData.floorPlans = [updateData.floorPlans];
+      }
+    }
+
+    if (!Array.isArray(updateData.floorPlans)) {
+      updateData.floorPlans = [updateData.floorPlans];
+    }
+  }
+
+  Object.assign(property, updateData);
   await property.save();
 
   await property.populate('agent', 'firstName lastName email profilePicture');

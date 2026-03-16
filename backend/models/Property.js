@@ -109,6 +109,24 @@ const propertySchema = new mongoose.Schema({
       default: false
     }
   }],
+  // Separate floor plans (not mixed with main images)
+  floorPlans: [{
+    url: {
+      type: String,
+      required: true
+    },
+    // Human-readable name used for filtering on frontend (e.g. "Ground Floor", "First Floor")
+    name: {
+      type: String,
+      required: [true, 'Floor plan name is required'],
+      trim: true
+    },
+    caption: String,
+    isPrimary: {
+      type: Boolean,
+      default: false
+    }
+  }],
   status: {
     type: String,
     enum: ['available', 'sold', 'rented', 'pending', 'inactive'],
@@ -203,20 +221,27 @@ propertySchema.set('toObject', { virtuals: true });
 
 // Pre-save middleware to ensure only one primary image
 propertySchema.pre('save', function(next) {
-  if (this.images && this.images.length > 0) {
-    const primaryImages = this.images.filter(img => img.isPrimary);
-    if (primaryImages.length > 1) {
-      // Keep only the first primary image
-      let foundPrimary = false;
-      this.images.forEach(img => {
-        if (img.isPrimary && !foundPrimary) {
-          foundPrimary = true;
-        } else if (img.isPrimary) {
-          img.isPrimary = false;
-        }
-      });
+  const ensureSinglePrimary = (items) => {
+    if (items && items.length > 0) {
+      const primaryItems = items.filter(img => img.isPrimary);
+      if (primaryItems.length > 1) {
+        let foundPrimary = false;
+        items.forEach(img => {
+          if (img.isPrimary && !foundPrimary) {
+            foundPrimary = true;
+          } else if (img.isPrimary) {
+            img.isPrimary = false;
+          }
+        });
+      }
     }
-  }
+  };
+
+  // Ensure only one primary main image
+  ensureSinglePrimary(this.images);
+  // Ensure only one primary floor plan
+  ensureSinglePrimary(this.floorPlans);
+
   next();
 });
 

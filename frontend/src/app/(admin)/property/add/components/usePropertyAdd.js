@@ -17,6 +17,8 @@ const usePropertyAdd = () => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [isImageUploading, setIsImageUploading] = useState(false);
+  const [uploadedFloorPlans, setUploadedFloorPlans] = useState([]);
+  const [isFloorPlanUploading, setIsFloorPlanUploading] = useState(false);
   const router = useRouter();
   const { showNotification } = useNotificationContext();
 
@@ -122,6 +124,13 @@ const usePropertyAdd = () => {
           url: img.fileUrl,
           caption: img.originalName || `Property Image ${index + 1}`,
           isPrimary: index === 0 // First image is primary
+        })),
+        // Include uploaded floor plans (separate from main images)
+        floorPlans: uploadedFloorPlans.map((plan, index) => ({
+          url: plan.fileUrl,
+          name: plan.name || plan.originalName || `Floor Plan ${index + 1}`, // used for frontend filtering
+          caption: plan.caption || plan.name || plan.originalName || `Floor Plan ${index + 1}`,
+          isPrimary: index === 0
         }))
         // agent and owner will be set by the backend based on authenticated user
       };
@@ -141,6 +150,7 @@ const usePropertyAdd = () => {
         setCity('');
         setCountry('');
         setUploadedImages([]);
+        setUploadedFloorPlans([]);
         setHasSubmitted(false);
         // Redirect to properties list view
         router.push('/property/list');
@@ -181,6 +191,7 @@ const usePropertyAdd = () => {
     setCity('');
     setCountry('');
     setUploadedImages([]);
+    setUploadedFloorPlans([]);
     setHasSubmitted(false);
     router.push('/property/list');
   };
@@ -199,6 +210,36 @@ const usePropertyAdd = () => {
   // Handle image upload finish (whether success or error)
   const handleImageUploadFinish = () => {
     setIsImageUploading(false);
+  };
+
+  // Handle floor plan upload completion
+  const handleFloorPlanUploadComplete = (uploadData) => {
+    console.log('usePropertyAdd received floor plan uploadData:', uploadData);
+    // Initialize with a editable name field (default from originalName)
+    const newPlans = (uploadData.images || []).map((img, index) => ({
+      ...img,
+      name: img.originalName || `Floor Plan ${uploadedFloorPlans.length + index + 1}`
+    }));
+    setUploadedFloorPlans(prev => [...prev, ...newPlans]);
+  };
+
+  const handleFloorPlanUploadStart = () => {
+    setIsFloorPlanUploading(true);
+  };
+
+  const handleFloorPlanUploadFinish = () => {
+    setIsFloorPlanUploading(false);
+  };
+
+  // Update a floor plan name (used by UI input)
+  const updateFloorPlanName = (index, name) => {
+    setUploadedFloorPlans(prev => {
+      const copy = [...prev];
+      if (copy[index]) {
+        copy[index] = { ...copy[index], name };
+      }
+      return copy;
+    });
   };
 
   return {
@@ -223,7 +264,13 @@ const usePropertyAdd = () => {
     isImageUploading,
     handleImageUploadComplete,
     handleImageUploadStart,
-    handleImageUploadFinish
+    handleImageUploadFinish,
+    uploadedFloorPlans,
+    isFloorPlanUploading,
+    handleFloorPlanUploadComplete,
+    handleFloorPlanUploadStart,
+    handleFloorPlanUploadFinish,
+    updateFloorPlanName
   };
 };
 
