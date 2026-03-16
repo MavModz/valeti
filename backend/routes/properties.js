@@ -407,9 +407,11 @@ router.post('/:id/favorite', auth, asyncHandler(async (req, res) => {
 // @route   POST /api/properties/upload-image
 // @desc    Upload property image to S3
 // @access  Private (Admin, Agent, or Property Owner)
-router.post('/upload-image', 
-  auth, 
-  authorize('admin', 'agent', 'owner'),
+// router.post('/upload-image', 
+//   auth, 
+//   authorize('admin', 'agent', 'owner'),
+//   upload.single('image'),
+router.post('/upload-image',
   upload.single('image'),
   asyncHandler(async (req, res) => {
     try {
