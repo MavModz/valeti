@@ -407,11 +407,9 @@ router.post('/:id/favorite', auth, asyncHandler(async (req, res) => {
 // @route   POST /api/properties/upload-image
 // @desc    Upload property image to S3
 // @access  Private (Admin, Agent, or Property Owner)
-// router.post('/upload-image', 
-//   auth, 
-//   authorize('admin', 'agent', 'owner'),
-//   upload.single('image'),
-router.post('/upload-image',
+router.post('/upload-image', 
+  auth, 
+  authorize('admin', 'agent', 'owner'),
   upload.single('image'),
   asyncHandler(async (req, res) => {
     try {
@@ -441,9 +439,8 @@ router.post('/upload-image',
         });
       }
 
-      // const userId = req.user.userId;
-      const userId = '68a7394b5acb2a982845e78b';
-      const userRole = 'admin';
+      const userId = req.user.userId;
+      const userRole = req.user.role;
       
       // Create folder name based on user role and purpose
       const folder = 'property-images';
