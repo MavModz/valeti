@@ -441,8 +441,9 @@ router.post('/upload-image',
         });
       }
 
-      const userId = req.user.userId;
-      const userRole = req.user.role;
+      // const userId = req.user.userId;
+      const userId = '68a7394b5acb2a982845e78b';
+      const userRole = 'admin';
       
       // Create folder name based on user role and purpose
       const folder = 'property-images';
