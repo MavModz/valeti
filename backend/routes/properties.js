@@ -21,7 +21,7 @@ const validateProperty = [
     .isIn(['new', 'featured'])
     .withMessage('Invalid property type'),
   body('category')
-    .isIn(['Single Story', 'Double Story'])
+    .isIn(['Single Story', 'Double Story', 'Back To Back'])
     .withMessage('Invalid property category'),
   body('price')
     .optional()
