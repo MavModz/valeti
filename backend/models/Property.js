@@ -19,7 +19,7 @@ const propertySchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['Single Story', 'Double Story'],
+    enum: ['Single Story', 'Double Story', 'Back To Back'],
     required: [true, 'Property category is required']
   },
   propertyFor: {
