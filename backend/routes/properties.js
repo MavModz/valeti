@@ -86,7 +86,7 @@ router.get('/', [
   query('page').optional().isInt({ min: 1 }).withMessage('Page must be a positive integer'),
   query('limit').optional().isInt({ min: 1, max: 100 }).withMessage('Limit must be between 1 and 100'),
   query('type').optional().isIn(['sale', 'rent', 'both']).withMessage('Invalid type filter'),
-  query('category').optional().isIn(['Single Story', 'Double Story']).withMessage('Invalid category filter'),
+  query('category').optional().isIn(['Single Story', 'Double Story', 'Back To Back']).withMessage('Invalid category filter'),
   query('minPrice').optional().isFloat({ min: 0 }).withMessage('Min price must be positive'),
   query('maxPrice').optional().isFloat({ min: 0 }).withMessage('Max price must be positive'),
   query('city').optional().trim().notEmpty().withMessage('City cannot be empty'),
