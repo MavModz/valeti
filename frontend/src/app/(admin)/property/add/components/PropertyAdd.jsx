@@ -78,7 +78,7 @@ const PropertyAdd = ({
                   {/* Multiunit Development Categories */}
                   <option value="Side By Side">Side By Side</option>
                   <option value="Back To Back">Back To Back</option>
-                  <option value="Multi Units">Multi Units</option>
+                  <option value="Multi Unit">Multi Unit</option>
                   
                   {/* Commercial Design Categories */}
                   <option value="Apartments">Apartments</option>
@@ -109,28 +109,18 @@ const PropertyAdd = ({
                 <label htmlFor="property-for" className="form-label">
                   Property For <span className="text-danger">*</span>
                 </label>
-                <select 
+                <input
+                  type="text"
                   className={`form-control ${hasSubmitted && !propertyFor ? 'is-invalid' : ''}`}
                   id="property-for"
                   value={propertyFor}
+                  placeholder="e.g. 16, 16.5, 16+"
                   onChange={(e) => setPropertyFor(e.target.value)}
-                >
-                  <option value="">Select Type</option>
-                  <option value="8 meter">8 meter</option>
-                  <option value="10 meter">10 meter</option>
-                  <option value="10.5 meter">10.5 meter</option>
-                  <option value="12 meter">12 meter</option>
-                  <option value="12.5 meter">12.5 meter</option>
-                  <option value="13 meter">13 meter</option>
-                  <option value="14 meter">14 meter</option>
-                  <option value="14.5 meter">14.5 meter</option>
-                  <option value="16 meter">16 meter</option>
-                  <option value="17 meter">17 meter</option>
-                  <option value="18 meter">18 meter</option>
-                  <option value="20 meter">20 meter</option>
-                  <option value="Uneven">Uneven</option>
-                </select>
-                {hasSubmitted && !propertyFor && <div className="invalid-feedback">Please select property type</div>}
+                />
+                {hasSubmitted && !propertyFor && (
+                  <div className="invalid-feedback">Please enter property type</div>
+                )}
+                <small className="form-text text-muted">We will append <code>meter</code> automatically.</small>
               </Col>
               <Col lg={4}>
                 <label htmlFor="property-bedroom" className="form-label">

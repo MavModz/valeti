@@ -95,13 +95,25 @@ const usePropertyAdd = () => {
 
     setIsLoading(true);
     try {
+      const rawPropertyFor = propertyFor?.toString().trim();
+      const normalizedPropertyFor = (() => {
+        if (!rawPropertyFor) return rawPropertyFor;
+        // If user already included "meter", keep it as-is.
+        if (/meter$/i.test(rawPropertyFor)) return rawPropertyFor;
+        // Allow special non-numeric values like "Uneven" to pass through.
+        if (!/^[-+]?\d*\.?\d+([+]?)*$/.test(rawPropertyFor) && rawPropertyFor.toLowerCase() !== 'uneven') {
+          return rawPropertyFor;
+        }
+        return `${rawPropertyFor} meter`;
+      })();
+
       // Prepare property data according to backend schema
       const propertyData = {
         title: data.name,
         description: data.description,
         type: 'new', // Default to sale since we're using meter values now
         category: propertyCategory, // Use exact values: 'Single Story', 'Double Story'
-        propertyFor: propertyFor, // Use exact meter values: '8 meter', '10 meter', etc.
+        propertyFor: normalizedPropertyFor, // Auto-append "meter" when needed
         price: data.price && data.price !== '' ? parseFloat(data.price) : undefined,
         location: {
           address: data.address && data.address.trim() !== '' ? data.address : undefined,
