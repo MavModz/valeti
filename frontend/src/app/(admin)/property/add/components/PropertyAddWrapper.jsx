@@ -52,7 +52,7 @@ const PropertyAddWrapper = () => {
       />
       <Col xl={9} lg={8}>
         <FileUpload 
-          title="Add Property Photo" 
+          title="Add Property Photo (Optional)" 
           onUploadComplete={handleImageUploadComplete}
           onUploadStart={handleImageUploadStart}
           onUploadFinish={handleImageUploadFinish}

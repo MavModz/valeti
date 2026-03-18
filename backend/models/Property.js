@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const DEFAULT_PROPERTY_IMAGE_URL = 'https://dummyimage.com/1600x1200/cccccc/000000&text=Render+Image';
+
 const propertySchema = new mongoose.Schema({
   title: {
     type: String,
@@ -221,6 +223,15 @@ propertySchema.set('toObject', { virtuals: true });
 
 // Pre-save middleware to ensure only one primary image
 propertySchema.pre('save', function(next) {
+  // Ensure every property has at least one main image
+  if (!this.images || this.images.length === 0) {
+    this.images = [{
+      url: DEFAULT_PROPERTY_IMAGE_URL,
+      caption: 'Render Image',
+      isPrimary: true
+    }];
+  }
+
   const ensureSinglePrimary = (items) => {
     if (items && items.length > 0) {
       const primaryItems = items.filter(img => img.isPrimary);
