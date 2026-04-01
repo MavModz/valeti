@@ -1,7 +1,10 @@
 'use client';
 
+import { useState } from 'react';
+import { uploadPropertyImage } from '@/app/lib/Services/api';
 import FileUpload from '@/components/FileUpload';
 import { Button, Card, CardBody, CardHeader, CardTitle, Col, FormControl, FormLabel, Row } from 'react-bootstrap';
+import { useNotificationContext } from '@/context/useNotificationContext';
 import PropertyAdd from './PropertyAdd';
 import PropertyAddCard from './PropertyAddCard';
 import usePropertyAdd from './usePropertyAdd';
@@ -40,6 +43,39 @@ const PropertyAddWrapper = () => {
     updateFloorPlanSubPlan,
     removeFloorPlanSubPlan
   } = usePropertyAdd();
+  const { showNotification } = useNotificationContext();
+  const [subPlanUploading, setSubPlanUploading] = useState({});
+
+  const handleSubPlanFileUpload = async (planIndex, subPlanIndex, event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const uploadKey = `${planIndex}-${subPlanIndex}`;
+    setSubPlanUploading((prev) => ({ ...prev, [uploadKey]: true }));
+
+    try {
+      const response = await uploadPropertyImage(file);
+      const uploadedUrl = response?.data?.fileUrl;
+
+      if (!response?.success || !uploadedUrl) {
+        throw new Error(response?.message || 'Failed to upload sub plan image');
+      }
+
+      updateFloorPlanSubPlan(planIndex, subPlanIndex, 'url', uploadedUrl);
+      showNotification({
+        message: 'Sub plan image uploaded successfully',
+        variant: 'success'
+      });
+    } catch (error) {
+      showNotification({
+        message: error?.message || 'Failed to upload sub plan image',
+        variant: 'error'
+      });
+    } finally {
+      setSubPlanUploading((prev) => ({ ...prev, [uploadKey]: false }));
+      event.target.value = '';
+    }
+  };
 
   return (
     <Row>
@@ -125,12 +161,20 @@ const PropertyAddWrapper = () => {
                                 onChange={(e) => updateFloorPlanSubPlan(index, subPlanIndex, 'name', e.target.value)}
                               />
                             </Col>
-                            <Col md={6}>
+                            <Col md={5}>
                               <FormControl
                                 type="text"
                                 value={subPlan.url || ''}
                                 placeholder="Sub plan image URL"
                                 onChange={(e) => updateFloorPlanSubPlan(index, subPlanIndex, 'url', e.target.value)}
+                              />
+                            </Col>
+                            <Col md={1}>
+                              <FormControl
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleSubPlanFileUpload(index, subPlanIndex, e)}
+                                disabled={Boolean(subPlanUploading[`${index}-${subPlanIndex}`])}
                               />
                             </Col>
                             <Col md={2}>
@@ -139,6 +183,7 @@ const PropertyAddWrapper = () => {
                                 variant="outline-danger"
                                 className="w-100"
                                 onClick={() => removeFloorPlanSubPlan(index, subPlanIndex)}
+                                disabled={Boolean(subPlanUploading[`${index}-${subPlanIndex}`])}
                               >
                                 Remove
                               </Button>
