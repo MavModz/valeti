@@ -207,7 +207,7 @@ const PropertyAdd = ({
               </Col>
               <Col lg={4}>
                 <label htmlFor="property-floor" className="form-label">
-                  Floor <span className="text-danger">*</span>
+                  Floor (Optional)
                 </label>
                 <div className="input-group mb-3">
                   <span className="input-group-text fs-20">
@@ -221,6 +221,32 @@ const PropertyAdd = ({
                     {...register('floor')}
                   />
                   {errors.floor && <div className="invalid-feedback">{errors.floor.message}</div>}
+                </div>
+              </Col>
+              <Col lg={4}>
+                <label htmlFor="property-cars" className="form-label">
+                  Cars Per Garage (Optional)
+                </label>
+                <div className="input-group mb-3">
+                  <span className="input-group-text fs-20">
+                    <IconifyIcon icon="solar:steering-wheel-broken" className="align-middle" />
+                  </span>
+                  <input
+                    type="number"
+                    id="property-cars"
+                    className={`form-control ${errors.cars ? 'is-invalid' : ''}`}
+                    placeholder="0"
+                    step="1"
+                    min="0"
+                    {...register('cars', {
+                      setValueAs: (value) => {
+                        if (value === '') return '';
+                        const num = parseInt(value, 10);
+                        return isNaN(num) ? '' : num;
+                      }
+                    })}
+                  />
+                  {errors.cars && <div className="invalid-feedback">{errors.cars.message}</div>}
                 </div>
               </Col>
               <Col lg={4}>
@@ -285,11 +311,11 @@ const PropertyAdd = ({
                     control={control} 
                     name="description" 
                     type="text" 
-                    label="Property Description" 
+                    label="Property Description (Optional)" 
                     className="form-control" 
                     id="description-textarea" 
                     rows={3} 
-                    placeholder="Enter detailed property description" 
+                    placeholder="Enter detailed property description (optional)" 
                     error={errors.description?.message}
                   />
                 </div>

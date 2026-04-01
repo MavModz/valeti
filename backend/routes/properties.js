@@ -14,9 +14,16 @@ const validateProperty = [
     .isLength({ min: 5, max: 200 })
     .withMessage('Title must be between 5 and 200 characters'),
   body('description')
-    .trim()
-    .isLength({ min: 10 })
-    .withMessage('Description must be at least 10 characters long'),
+    .optional()
+    .custom((value) => {
+      if (value === undefined || value === null || value === '') {
+        return true; // Allow empty/undefined values
+      }
+      if (value.trim().length < 10) {
+        throw new Error('Description must be at least 10 characters long if provided');
+      }
+      return true;
+    }),
   body('type')
     .isIn(['new', 'featured'])
     .withMessage('Invalid property type'),
@@ -65,6 +72,10 @@ const validateProperty = [
     .optional()
     .isFloat({ min: 0 })
     .withMessage('Garages must be a positive number'),
+  body('features.cars')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Cars must be a positive number'),
   body('features.theater')
     .optional()
     .isFloat({ min: 0 })

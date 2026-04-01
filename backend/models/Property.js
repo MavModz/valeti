@@ -11,7 +11,7 @@ const propertySchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: [true, 'Property description is required'],
+    required: false,
     trim: true
   },
   type: {
@@ -80,7 +80,11 @@ const propertySchema = new mongoose.Schema({
     },
     floors: {
       type: Number,
-      min: [1, 'Floors must be at least 1']
+      min: [0, 'Floors cannot be negative']
+    },
+    cars: {
+      type: Number,
+      min: [0, 'Cars cannot be negative']
     },
     garages: {
       type: Number,
@@ -127,7 +131,20 @@ const propertySchema = new mongoose.Schema({
     isPrimary: {
       type: Boolean,
       default: false
-    }
+    },
+    // Optional variants under a floor plan (e.g. kitchen layout changes)
+    subPlans: [{
+      name: {
+        type: String,
+        required: [true, 'Sub plan name is required'],
+        trim: true
+      },
+      url: {
+        type: String,
+        required: [true, 'Sub plan URL is required']
+      },
+      caption: String
+    }]
   }],
   status: {
     type: String,

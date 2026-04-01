@@ -25,7 +25,9 @@ const usePropertyAdd = () => {
   // Validation schema
   const propertySchema = yup.object({
     name: yup.string().required('Property name is required').min(3, 'Property name must be at least 3 characters'),
-    description: yup.string().required('Property description is required').min(10, 'Description must be at least 10 characters'),
+    description: yup.string().transform((value, originalValue) => {
+      return originalValue === '' ? undefined : value;
+    }).min(10, 'Description must be at least 10 characters if provided').optional(),
     price: yup.number().transform((value, originalValue) => {
       return originalValue === '' ? undefined : value;
     }).positive('Price must be positive').optional(),
@@ -39,7 +41,12 @@ const usePropertyAdd = () => {
       })
       .positive('Meter square must be positive')
       .required('Meter square is required'),
-    floor: yup.number().min(0, 'Floor must be 0 or greater').required('Floor number is required'),
+    floor: yup.number().transform((value, originalValue) => {
+      return originalValue === '' ? undefined : value;
+    }).min(0, 'Floor must be 0 or greater').optional(),
+    cars: yup.number().transform((value, originalValue) => {
+      return originalValue === '' ? undefined : value;
+    }).integer('Cars must be a whole number').min(0, 'Cars must be 0 or greater').optional(),
     garages: yup.number().transform((value, originalValue) => {
       return originalValue === '' ? undefined : value;
     }).min(0, 'Garages must be 0 or greater').optional(),
@@ -72,6 +79,7 @@ const usePropertyAdd = () => {
       bathrooms: '',
       squareFootage: '',
       floor: '',
+      cars: '',
       garages: '',
       theater: '',
       address: '',
@@ -110,7 +118,7 @@ const usePropertyAdd = () => {
       // Prepare property data according to backend schema
       const propertyData = {
         title: data.name,
-        description: data.description,
+        description: data.description && data.description.trim() !== '' ? data.description : undefined,
         type: 'new', // Default to sale since we're using meter values now
         category: propertyCategory, // Use exact values: 'Single Story', 'Double Story'
         propertyFor: normalizedPropertyFor, // Auto-append "meter" when needed
@@ -126,7 +134,8 @@ const usePropertyAdd = () => {
           bedrooms: parseFloat(data.bedrooms),
           bathrooms: parseFloat(data.bathrooms),
           area: parseFloat(data.squareFootage),
-          floors: parseInt(data.floor),
+          floors: data.floor && data.floor !== '' ? parseInt(data.floor, 10) : undefined,
+          cars: data.cars && data.cars !== '' ? parseInt(data.cars, 10) : undefined,
           garages: data.garages && data.garages !== '' ? parseFloat(data.garages) : undefined,
           theater: data.theater && data.theater !== '' ? parseFloat(data.theater) : undefined
         },
@@ -142,7 +151,14 @@ const usePropertyAdd = () => {
           url: plan.fileUrl,
           name: plan.name || plan.originalName || `Floor Plan ${index + 1}`, // used for frontend filtering
           caption: plan.caption || plan.name || plan.originalName || `Floor Plan ${index + 1}`,
-          isPrimary: index === 0
+          isPrimary: index === 0,
+          subPlans: (plan.subPlans || [])
+            .filter((subPlan) => subPlan?.name?.trim() && subPlan?.url?.trim())
+            .map((subPlan) => ({
+              name: subPlan.name.trim(),
+              url: subPlan.url.trim(),
+              caption: subPlan.caption?.trim() || subPlan.name.trim()
+            }))
         }))
         // agent and owner will be set by the backend based on authenticated user
       };
@@ -230,7 +246,8 @@ const usePropertyAdd = () => {
     // Initialize with a editable name field (default from originalName)
     const newPlans = (uploadData.images || []).map((img, index) => ({
       ...img,
-      name: img.originalName || `Floor Plan ${uploadedFloorPlans.length + index + 1}`
+      name: img.originalName || `Floor Plan ${uploadedFloorPlans.length + index + 1}`,
+      subPlans: []
     }));
     setUploadedFloorPlans(prev => [...prev, ...newPlans]);
   };
@@ -250,6 +267,47 @@ const usePropertyAdd = () => {
       if (copy[index]) {
         copy[index] = { ...copy[index], name };
       }
+      return copy;
+    });
+  };
+
+  const addFloorPlanSubPlan = (planIndex) => {
+    setUploadedFloorPlans((prev) => {
+      const copy = [...prev];
+      if (!copy[planIndex]) return copy;
+      const currentSubPlans = copy[planIndex].subPlans || [];
+      copy[planIndex] = {
+        ...copy[planIndex],
+        subPlans: [...currentSubPlans, { name: '', url: '', caption: '' }]
+      };
+      return copy;
+    });
+  };
+
+  const updateFloorPlanSubPlan = (planIndex, subPlanIndex, field, value) => {
+    setUploadedFloorPlans((prev) => {
+      const copy = [...prev];
+      if (!copy[planIndex]) return copy;
+      const currentSubPlans = [...(copy[planIndex].subPlans || [])];
+      if (!currentSubPlans[subPlanIndex]) return copy;
+      currentSubPlans[subPlanIndex] = {
+        ...currentSubPlans[subPlanIndex],
+        [field]: value
+      };
+      copy[planIndex] = { ...copy[planIndex], subPlans: currentSubPlans };
+      return copy;
+    });
+  };
+
+  const removeFloorPlanSubPlan = (planIndex, subPlanIndex) => {
+    setUploadedFloorPlans((prev) => {
+      const copy = [...prev];
+      if (!copy[planIndex]) return copy;
+      const currentSubPlans = [...(copy[planIndex].subPlans || [])];
+      copy[planIndex] = {
+        ...copy[planIndex],
+        subPlans: currentSubPlans.filter((_, idx) => idx !== subPlanIndex)
+      };
       return copy;
     });
   };
@@ -282,7 +340,10 @@ const usePropertyAdd = () => {
     handleFloorPlanUploadComplete,
     handleFloorPlanUploadStart,
     handleFloorPlanUploadFinish,
-    updateFloorPlanName
+    updateFloorPlanName,
+    addFloorPlanSubPlan,
+    updateFloorPlanSubPlan,
+    removeFloorPlanSubPlan
   };
 };
 
