@@ -132,6 +132,12 @@ const propertySchema = new mongoose.Schema({
       type: Boolean,
       default: false
     },
+    // Optional mirrored / flip variant of this floor plan (main plan only, not subPlans)
+    flipImageUrl: {
+      type: String,
+      required: false,
+      trim: true
+    },
     // Optional variants under a floor plan (e.g. kitchen layout changes)
     subPlans: [{
       name: {

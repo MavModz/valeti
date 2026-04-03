@@ -39,12 +39,14 @@ const PropertyAddWrapper = () => {
     handleFloorPlanUploadStart,
     handleFloorPlanUploadFinish,
     updateFloorPlanName,
+    updateFloorPlanFlipImageUrl,
     addFloorPlanSubPlan,
     updateFloorPlanSubPlan,
     removeFloorPlanSubPlan
   } = usePropertyAdd();
   const { showNotification } = useNotificationContext();
   const [subPlanUploading, setSubPlanUploading] = useState({});
+  const [flipPlanUploading, setFlipPlanUploading] = useState({});
 
   const handleSubPlanFileUpload = async (planIndex, subPlanIndex, event) => {
     const file = event.target.files?.[0];
@@ -73,6 +75,36 @@ const PropertyAddWrapper = () => {
       });
     } finally {
       setSubPlanUploading((prev) => ({ ...prev, [uploadKey]: false }));
+      event.target.value = '';
+    }
+  };
+
+  const handleFlipPlanFileUpload = async (planIndex, event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setFlipPlanUploading((prev) => ({ ...prev, [planIndex]: true }));
+
+    try {
+      const response = await uploadPropertyImage(file);
+      const uploadedUrl = response?.data?.fileUrl;
+
+      if (!response?.success || !uploadedUrl) {
+        throw new Error(response?.message || 'Failed to upload flip image');
+      }
+
+      updateFloorPlanFlipImageUrl(planIndex, uploadedUrl);
+      showNotification({
+        message: 'Flip image uploaded successfully',
+        variant: 'success'
+      });
+    } catch (error) {
+      showNotification({
+        message: error?.message || 'Failed to upload flip image',
+        variant: 'error'
+      });
+    } finally {
+      setFlipPlanUploading((prev) => ({ ...prev, [planIndex]: false }));
       event.target.value = '';
     }
   };
@@ -137,6 +169,54 @@ const PropertyAddWrapper = () => {
                           />
                         </Col>
                       </Row>
+
+                      <div className="mt-3">
+                        <FormLabel className="mb-2">Flip image (optional)</FormLabel>
+                        <Row className="g-2 align-items-center">
+                          {plan.flipImageUrl ? (
+                            <Col xs="auto">
+                              <div className="avatar-sm">
+                                <img
+                                  src={plan.flipImageUrl}
+                                  alt="Flip plan"
+                                  className="avatar-sm rounded bg-light"
+                                />
+                              </div>
+                            </Col>
+                          ) : null}
+                          <Col md>
+                            <FormControl
+                              type="text"
+                              value={plan.flipImageUrl || ''}
+                              placeholder="Flip image URL (or upload below)"
+                              onChange={(e) => updateFloorPlanFlipImageUrl(index, e.target.value)}
+                              disabled={Boolean(flipPlanUploading[index])}
+                            />
+                          </Col>
+                          <Col xs="auto">
+                            <FormControl
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleFlipPlanFileUpload(index, e)}
+                              disabled={Boolean(flipPlanUploading[index]) || isLoading}
+                            />
+                          </Col>
+                          {plan.flipImageUrl ? (
+                            <Col xs="auto">
+                              <Button
+                                type="button"
+                                variant="outline-secondary"
+                                size="sm"
+                                onClick={() => updateFloorPlanFlipImageUrl(index, '')}
+                                disabled={Boolean(flipPlanUploading[index])}
+                              >
+                                Clear
+                              </Button>
+                            </Col>
+                          ) : null}
+                        </Row>
+                        <small className="text-muted">One optional flip/mirror image per floor plan.</small>
+                      </div>
 
                       <div className="mt-2">
                         <div className="d-flex justify-content-between align-items-center mb-2">

@@ -152,6 +152,9 @@ const usePropertyAdd = () => {
           name: plan.name || plan.originalName || `Floor Plan ${index + 1}`, // used for frontend filtering
           caption: plan.caption || plan.name || plan.originalName || `Floor Plan ${index + 1}`,
           isPrimary: index === 0,
+          ...(plan.flipImageUrl && String(plan.flipImageUrl).trim()
+            ? { flipImageUrl: String(plan.flipImageUrl).trim() }
+            : {}),
           subPlans: (plan.subPlans || [])
             .filter((subPlan) => subPlan?.name?.trim() && subPlan?.url?.trim())
             .map((subPlan) => ({
@@ -247,6 +250,7 @@ const usePropertyAdd = () => {
     const newPlans = (uploadData.images || []).map((img, index) => ({
       ...img,
       name: img.originalName || `Floor Plan ${uploadedFloorPlans.length + index + 1}`,
+      flipImageUrl: '',
       subPlans: []
     }));
     setUploadedFloorPlans(prev => [...prev, ...newPlans]);
@@ -266,6 +270,16 @@ const usePropertyAdd = () => {
       const copy = [...prev];
       if (copy[index]) {
         copy[index] = { ...copy[index], name };
+      }
+      return copy;
+    });
+  };
+
+  const updateFloorPlanFlipImageUrl = (index, flipImageUrl) => {
+    setUploadedFloorPlans((prev) => {
+      const copy = [...prev];
+      if (copy[index]) {
+        copy[index] = { ...copy[index], flipImageUrl };
       }
       return copy;
     });
@@ -341,6 +355,7 @@ const usePropertyAdd = () => {
     handleFloorPlanUploadStart,
     handleFloorPlanUploadFinish,
     updateFloorPlanName,
+    updateFloorPlanFlipImageUrl,
     addFloorPlanSubPlan,
     updateFloorPlanSubPlan,
     removeFloorPlanSubPlan
