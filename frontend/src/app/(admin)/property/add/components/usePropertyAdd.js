@@ -120,7 +120,7 @@ const usePropertyAdd = () => {
         title: data.name,
         description: data.description && data.description.trim() !== '' ? data.description : undefined,
         type: 'new', // Default to sale since we're using meter values now
-        category: propertyCategory, // Use exact values: 'Single Story', 'Double Story'
+        category: propertyCategory, // Use exact values: 'Single Storey', 'Double Storey'
         propertyFor: normalizedPropertyFor, // Auto-append "meter" when needed
         price: data.price && data.price !== '' ? parseFloat(data.price) : undefined,
         location: {

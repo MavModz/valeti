@@ -56,8 +56,8 @@ const PropertyAdd = ({
                   <option value="">Select Categories</option>
                   
                   {/* Standard Home Design Categories */}
-                  <option value="Single Story">Singles</option>
-                  <option value="Double Story">Doubles</option>
+                  <option value="Single Storey">Singles</option>
+                  <option value="Double Storey">Doubles</option>
                   <option value="Farm House">Farm House</option>
                   <option value="NDIS">NDIS</option>
                   <option value="Small Lot Design">Small Lot Design</option>

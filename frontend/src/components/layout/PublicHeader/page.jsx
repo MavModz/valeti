@@ -65,8 +65,8 @@ const PublicHeader = () => {
           label: 'Standard Home Design',
           href: '/home-designs/standard', // Main category page
           subDropdown: [
-            { label: 'Singles', href: '/home-designs/standard?category=Single%20Story', category: 'Singles' },
-            { label: 'Doubles', href: '/home-designs/standard?category=Double%20Story', category: 'Doubles' },
+            { label: 'Singles', href: '/home-designs/standard?category=Single%20Storey', category: 'Singles' },
+            { label: 'Doubles', href: '/home-designs/standard?category=Double%20Storey', category: 'Doubles' },
             { label: 'Farm House', href: '/home-designs/standard?category=Farm%20House', category: 'Farm House' },
             { label: 'NDIS', href: '/home-designs/standard?category=NDIS', category: 'NDIS' },
             { label: 'Small Lot Design', href: '/home-designs/standard?category=Small%20Lot%20Design', category: 'Small Lot Design' },

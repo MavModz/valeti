@@ -21,7 +21,7 @@ const propertySchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['Single Story', 'Double Story', 'Back To Back', 'Multi Unit'],
+    enum: ['Single Storey', 'Double Storey', 'Back To Back', 'Multi Unit'],
     required: [true, 'Property category is required']
   },
   propertyFor: {

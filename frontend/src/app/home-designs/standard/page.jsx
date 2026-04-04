@@ -59,7 +59,7 @@ const StandardHomeDesignPage = () => {
       setLoading(true);
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
       
-      // Build query parameters - Standard Home Design typically includes Single Story and Double Story
+      // Build query parameters - Standard Home Design typically includes Single Storey and Double Storey
       const params = new URLSearchParams();
       params.append('limit', '100');
       if (category && category !== 'All') {
